@@ -1,0 +1,17 @@
+{
+  "displayName": "Nouveau",
+  "roleNames": {
+    "commander": "General",
+    "bodyguard": "Confidant",
+    "falseCommander": "Imposter",
+    "deepCover": "Betrayer",
+    "blindSpy": "Lone Wolf",
+    "follower": "Apprentice",
+    "good": "Resistance",
+    "evil": "Spy"
+  },
+  "factionNames": {
+    "good": "resistance",
+    "evil": "spy"
+  }
+}

@@ -1,0 +1,16 @@
+#npm add typescript -D
+#npm add @types/react
+#npm add @types/react-native
+#npm add @types/expo
+#npm add tslint -D
+#npm add prettier -D
+npm add tslint-config-prettier -D
+npm add tslint-plugin-prettier -D
+npm add tslint-react -D
+npm add chokidar-cli -D
+npm add jest -D
+npm add @types/jest -D
+npm add ts-jest -D
+npm add jest-expo -D
+npm add react-test-renderer -D
+npm add @types/react-test-renderer -D

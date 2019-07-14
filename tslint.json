@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+    // "tslint-react-hooks"
+  ],
+  "rules": {
+    "prettier": true,
+    // .ts files are PascalCase if they contains application domain code, otherwise camelCase if they contain utility/generic/system type of code.
+    "file-name-casing": false, // [true, { ".tsx": "pascal-case", ".ts": "camel-case" | "pascal-case" }],
+    "interface-name": false,
+    "object-literal-sort-keys": false,
+    "member-access": false,
+    "ordered-imports": false,
+    "radix": false,
+    "no-namespace": false,
+    "no-shadowed-variable": [
+      true,
+      {
+        "typeAlias": false,
+        "underscore": false
+      }
+    ],
+    "no-console": false, // TODO Possibly enable for production.
+    "member-ordering": false,
+    "interface-over-type-literal": false,
+    "strict-type-predicates": true,
+    "max-classes-per-file": [true, 10, "exclude-class-expressions"]
+    // "react-hooks-nesting": "error"
+  },
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js"
+    ]
+  }
+}

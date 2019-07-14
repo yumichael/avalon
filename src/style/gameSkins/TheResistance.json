@@ -1,0 +1,17 @@
+{
+  "displayName": "Classic",
+  "roleNames": {
+    "commander": "Commander",
+    "bodyguard": "Body Guard",
+    "falseCommander": "False Commander",
+    "deepCover": "Deep Cover",
+    "blindSpy": "Blind Spy",
+    "follower": "Follower",
+    "good": "Resistance",
+    "evil": "Spy"
+  },
+  "factionNames": {
+    "good": "resistance",
+    "evil": "spy"
+  }
+}
