@@ -2,7 +2,9 @@ There are other TODOs scattered within the code itself. Use VSCode and search `T
 
 # TODO right now
 
-- Give room directorship.
+- Refactor `RoomX` UI states into a MobX observable class and similarly for `GameXInjection.
+  - Let the `RoomX` state class hold a copy of the `GameXInjection` state class.
+- Give room directorship to another player feature.
 - Walls closing in and banner/command borders colors.
   - Banner becomes winning team color at game finish.
   - Command is room passive color when there is no active game.
