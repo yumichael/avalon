@@ -1,3 +1,5 @@
+There are other TODOs scattered within the code itself. Use VSCode and search `TODO`.
+
 # TODO right now
 
 - Give room directorship.
