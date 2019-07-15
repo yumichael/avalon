@@ -1,7 +1,7 @@
 - What are the naming and code hierarchy organization (under folders or layers of namespaces) conventions?
     - What are the naming conventions
-        - PascalCase for React component containing .tsx files.
-        - camelCase ... TODO
+        - For files, PascalCase is used when a file is best summarized by a Proper Noun whose domain is specific to this app and camelCase is used for a file that is best summarized by a general term whose meaning is retained outside the context of this app.
+            - As a corollary, PascalCase is used for React component containing .tsx files.
         - Folders are named as parsimoniously as possible as long as its responsibility is fully specified given the ancestral folder context.
         - Files are named succinctly but need to maintain global intention unambiguity.
         - Single default export items must match their file name (before the file extension), except React components.
