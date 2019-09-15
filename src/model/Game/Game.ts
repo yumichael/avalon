@@ -17,6 +17,13 @@ namespace Game {
   };
   export namespace Data {
     export type State = 'ready' | 'loading';
+    // Get the Firestore query key for a `Player`.
+    export function getPlayerKey(playerIndex: Player.Index): string {
+      return `players.${playerIndex}`;
+    }
+    export namespace getPlayerKey {
+      export type valueType = Game.Player;
+    }
     // Get the Firestore query key for a `Mission`.
     export function getMissionKey(missionIndex: Mission.Index): string {
       return `play.missions.${missionIndex}`;
@@ -72,6 +79,7 @@ namespace Game {
   export type Player = {
     readonly faction: Player.Faction;
     readonly role?: Player.Role;
+    readonly hasSeenRole?: true;
   };
   export type MutablePlayer = {
     faction: Player.Faction;
@@ -110,6 +118,7 @@ namespace Game {
         blindSpy: 3,
       };
     }
+    export type RoleView = Role | 'bodyguardView' | 'evil' | 'good';
   }
 
   export type Play = {

@@ -18,6 +18,65 @@ class GameInformer {
 
   // ATTENTION! Every method below MUST ONLY be called when `this.getGameDataState() === 'ready'`.
 
+  getPlayerRoleView(
+    playerIndex: Game.Player.Index,
+    viewingPlayerIndex?: Game.Player.Index,
+  ): Game.Player.RoleView | null {
+    const faction = this.getPlayerFaction(playerIndex);
+    const roleOrFaction = this.getPlayerRole(playerIndex) || faction;
+    if (this.getGameFinish() || playerIndex === viewingPlayerIndex) {
+      return roleOrFaction;
+    } else if (viewingPlayerIndex !== undefined) {
+      switch (this.getPlayerRole(viewingPlayerIndex) || this.getPlayerFaction(viewingPlayerIndex)) {
+        case 'commander':
+          switch (roleOrFaction) {
+            case 'deepCover':
+              return null;
+            case 'evil':
+              return 'evil';
+            default:
+              return null;
+          }
+        case 'bodyguard':
+          switch (roleOrFaction) {
+            case 'commander':
+            case 'falseCommander':
+              return 'bodyguardView';
+            default:
+              return null;
+          }
+        case 'evil':
+        case 'deepCover':
+        case 'falseCommander':
+          switch (roleOrFaction) {
+            case 'evil':
+            case 'deepCover':
+            case 'falseCommander':
+              return 'evil';
+            default:
+              return null;
+          }
+        case 'blindSpy':
+        case 'good':
+          return null;
+      }
+    } else {
+      return null;
+    }
+    // Should already have returned a value in all cases covered but I guess Typescript is weak.
+    return null;
+  }
+
+  getPlayerFaction(playerIndex: Game.Player.Index): Game.Player.Faction {
+    const player = this.players[playerIndex]!;
+    return player.faction;
+  }
+
+  getPlayerRole(playerIndex: Game.Player.Index): Game.Player.Role | undefined {
+    const player = this.players[playerIndex]!;
+    return player.role;
+  }
+
   getLatestMissionIndex(): Game.Mission.Index {
     return (this.getMissionsDataSize() - 1) as Game.Mission.Index;
   }
@@ -135,12 +194,16 @@ class GameInformer {
     } else {
       const successBidCount = this.getMissionRoundSuccessCount(missionIndex, roundIndex)!;
       const failBidCount = this.getMissionRoundFailCount(missionIndex, roundIndex)!;
-      if (!!!failBidCount || (this.getPlayerCount() >= 7 && roundIndex === 3 && failBidCount < 2)) {
+      if (failBidCount < this.getFailingBidCountForMission(missionIndex)) {
         return { successBidCount, failBidCount, outcome: 'success' };
       } else {
         return { successBidCount, failBidCount, outcome: 'fail' };
       }
     }
+  }
+
+  getFailingBidCountForMission(missionIndex: Game.Mission.Index): number {
+    return this.getPlayerCount() >= 7 && missionIndex === 3 ? 2 : 1;
   }
 
   getMissionsResult(): Game.Missions.Result | undefined {
@@ -149,8 +212,6 @@ class GameInformer {
     const successCount = sum(results.map(r => !!r && r.outcome === 'success'));
     const failCount = sum(results.map(r => !!r && r.outcome === 'fail'));
     if (successCount <= missionCount / 2 && failCount <= missionCount / 2) {
-      // TODO TEST use this line for prod.
-      // if (successCount < 1 && failCount < 1) {
       return undefined;
     } else {
       if (successCount > missionCount / 2) {
@@ -270,11 +331,6 @@ class GameInformer {
 
   getPlayerCount(): Game.Player.Count {
     return size(this.players) as Game.Player.Count;
-  }
-
-  getPlayerFaction(playerIndex: Game.Player.Index): Game.Player.Faction {
-    const player = this.players[playerIndex]!;
-    return player.faction;
   }
 
   getMissionRoundPlayerAttributes(

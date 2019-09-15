@@ -12,6 +12,8 @@ import { loggedConstructor, loggedMethod, loggingDisabled } from 'src/library/lo
 import { makeRandomString } from 'src/library/helpers/programmingHelp';
 import range from 'lodash/range';
 
+/* This class represents the API for a specific user interacting with a room.
+ */
 @loggedConstructor()
 class RoomApi implements DocApi<Room.Ref> {
   readonly userRef: User.Ref;
@@ -23,9 +25,6 @@ class RoomApi implements DocApi<Room.Ref> {
 
   @loggedMethod()
   static setupNewRoom(roomRef: Room.Ref, director: User.Ref, seatCount: Room.Seat.Count) {
-    // console.groupCollapsed(
-    //   `RoomApi.setupNewRoom(roomRef: ${roomRef}, director: ${director}, seatCount: ${seatCount})`,
-    // );
     const roomDoc = Room.dataApi.openUntrackedDoc(roomRef);
     const seats: Room.Data['seats'] = Object.assign({}, Room.Seat.Index.range(seatCount).map(
       i => Room.Seat.defaultValue,
@@ -37,7 +36,6 @@ class RoomApi implements DocApi<Room.Ref> {
       chat: {},
     };
     roomDoc.set(init);
-    // console.groupEnd();
   }
 
   @loggedMethod()
@@ -58,7 +56,7 @@ class RoomApi implements DocApi<Room.Ref> {
 
   @loggedMethod()
   getDataState(): Room.Data.State {
-    return this.doc.hasData ? 'ready' : 'loading';
+    return this.doc && this.doc.hasData ? 'ready' : 'loading';
   }
 
   // ATTENTION! Every method below MUST NOT be called before the data is synced from Firebase.
@@ -152,6 +150,24 @@ class RoomApi implements DocApi<Room.Ref> {
 
   // Now the interaction methods.
 
+  canSetDirector(userRef?: User.Ref): boolean {
+    if (!!!this.getUserPowers(this.userRef).canSetDirector) {
+      return false;
+    }
+    return true;
+  }
+
+  setDirector(userRefToSet: User.Ref): RoomApi.Feedback {
+    if (!!!this.canSetDirector(userRefToSet)) {
+      return 'cannot';
+    }
+    if (!!!this.getDirector().isEqual(userRefToSet)) {
+      const director: Room.Data['director'] = userRefToSet;
+      this.doc.update({ director });
+    }
+    return 'attempted';
+  }
+
   canSitAtSeat(seatIndex: Room.Seat.Index): boolean {
     if (
       this.getUserStatus(this.userRef) !== 'standing' ||
@@ -171,7 +187,7 @@ class RoomApi implements DocApi<Room.Ref> {
       return 'cannot';
     }
     const seatKey = Room.Data.getSeatKey(seatIndex);
-    const seatData: Room.Seat = { userRef: this.userRef };
+    const seatData: Room.Data.getSeatKey.valueType = { userRef: this.userRef };
     this.doc.update({ [seatKey]: seatData });
     return 'attempted';
   }
@@ -349,12 +365,23 @@ class RoomApi implements DocApi<Room.Ref> {
     };
     const gameRef = Game.dataApi.createRefForNewDoc();
     GameApi.setupNewGame(gameRef, specs);
+
+    const oldGameRef = this.playing && this.playing.gameRef;
+    this.roomPlaying = undefined;
+
     const playing: Room.Data['playing'] = {
       gameRef,
       userToPlayerMap,
       host: this.userRef,
     };
-    this.doc.update({ playing });
+    this.doc.update({ playing }).then(() => {
+      if (oldGameRef) {
+        const oldGameDoc = Game.dataApi.openUntrackedDoc(oldGameRef);
+        if (oldGameDoc) {
+          oldGameDoc.delete();
+        }
+      }
+    });
     return 'attempted';
   }
 }

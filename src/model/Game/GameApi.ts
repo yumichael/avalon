@@ -3,12 +3,7 @@ import Game from './Game';
 import GameHost from './GameHost';
 import GameInformer from './GameInformer';
 import GameActor from './GameActor';
-import {
-  loggedConstructor,
-  loggedMethod,
-  logged,
-  loggingBody,
-} from 'src/library/logging/loggers';
+import { loggedConstructor, loggedMethod, logged, loggingBody } from 'src/library/logging/loggers';
 
 @loggedConstructor({ ...loggingBody }) // TODO try removing `loggedConstructor` and seeing what the native class looks like in the console (copy more metadata).
 class GameApi implements DocApi<Game.Ref> {
@@ -33,10 +28,7 @@ class GameApi implements DocApi<Game.Ref> {
     return new GameApi.Initiator(specs);
   }
 
-  constructor(
-    contract: DocApi.WillWaitUntilDocHasDataContract,
-    specs: GameApi.Specs,
-  ) {
+  constructor(contract: DocApi.WillWaitUntilDocHasDataContract, specs: GameApi.Specs) {
     this.contract = contract;
     const { gameRef, playerIndex, shouldHost } = specs;
     Game.dataApi.openNewDoc(gameRef);
@@ -46,9 +38,7 @@ class GameApi implements DocApi<Game.Ref> {
       playerIndex !== undefined
         ? new GameActor(this.contract, gameRef, playerIndex, this.info)
         : undefined;
-    this.host = shouldHost
-      ? new GameHost(this.contract, gameRef, this.info)
-      : undefined;
+    this.host = shouldHost ? new GameHost(this.contract, gameRef, this.info) : undefined;
     logged({
       gameRef,
       'this.info': this.info,
@@ -59,20 +49,15 @@ class GameApi implements DocApi<Game.Ref> {
 
   @loggedMethod()
   getDataState(): Game.Data.State {
-    return this.doc.hasData ? 'ready' : 'loading';
+    return this.doc && this.doc.hasData ? 'ready' : 'loading';
   }
 
   // ATTENTION! Everything method below MUST NOT be called before the data is synced from Firebase.
 
-  private readonly nullAutorunCallbacks: GameHost.AutorunCallbacks = [
-    () => null,
-    () => null,
-  ];
+  private readonly nullAutorunCallbacks: GameHost.AutorunCallbacks = [() => null, () => null];
   @loggedMethod()
   getAutorunCallbacks(): GameHost.AutorunCallbacks {
-    return this.host
-      ? this.host.getAutorunCallbacks()
-      : this.nullAutorunCallbacks;
+    return this.host ? this.host.getAutorunCallbacks() : this.nullAutorunCallbacks;
   }
 }
 namespace GameApi {
@@ -81,11 +66,9 @@ namespace GameApi {
     export type Cannot = 'cannot';
   }
 
-  export class Initiator extends DocApi.Initiator.createSubclass<
-    Game.Ref,
+  export class Initiator extends DocApi.Initiator.createSubclass<Game.Ref, GameApi, GameApi.Specs>(
     GameApi,
-    GameApi.Specs
-  >(GameApi) {}
+  ) {}
   export type Specs = {
     gameRef: Game.Ref;
     playerIndex?: Game.Player.Index;

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'src/library/ui/components';
 
 export default StyleSheet.create({
+  container: { flex: 1 },
   instructions: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -19,4 +20,5 @@ export default StyleSheet.create({
   text: {
     textAlign: 'center',
   },
+  touch: { flex: 1 },
 });

@@ -6,8 +6,13 @@ import TeamDecoratorX from './TeamDecorator';
 import VoteDecoratorX from './VoteDecorator';
 import LeaderDecoratorX from './LeaderDecorator';
 import { loggedReactFC } from 'src/library/logging/loggers';
+import SecretsView from '../state/SecretsView';
+import RoleDecoratorX from './RoleDecorator';
 
-let PlayerAttributesX: React.FC<{ playerIndex: Game.Player.Index }> = ({ playerIndex }) => {
+let PlayerAttributesX: React.FC<{ playerIndex: Game.Player.Index; secretsView: SecretsView }> = ({
+  playerIndex,
+  secretsView,
+}) => {
   const k = playerIndex;
   const playerContextValue = useMemo(() => ({ playerIndex: k }), [k]);
   return (
@@ -15,6 +20,7 @@ let PlayerAttributesX: React.FC<{ playerIndex: Game.Player.Index }> = ({ playerI
       <TeamDecoratorX />
       <VoteDecoratorX />
       <LeaderDecoratorX />
+      {secretsView.isViewingRoleInfo() ? <RoleDecoratorX /> : null}
     </PlayerContext.Provider>
   );
 };

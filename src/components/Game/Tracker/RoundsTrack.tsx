@@ -9,10 +9,7 @@ import { StyleSheet, View } from 'src/library/ui/components';
 
 let RoundsTrackX: React.FC<{ roundView: RoundView }> = ({ roundView }) => {
   const { info } = useContext(GameContext).gameApi;
-  const [i]: [
-    Game.Mission.Index,
-    Game.Mission.Round.Index | undefined,
-  ] = roundView.getProperIndices(info);
+  const [i]: [Game.Mission.Index, Game.Mission.Round.Index] = roundView.getIndices();
   return (
     <View style={styles.default}>
       {Game.Mission.Round.Index.range(info.getRoundCountForMission(i)).map(j => (
@@ -25,7 +22,8 @@ RoundsTrackX = observerWithMeta(loggedReactFC()(RoundsTrackX));
 
 const styles = StyleSheet.create({
   default: {
-    flex: 1,
+    padding: 2,
+    // flex: 0.44,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },

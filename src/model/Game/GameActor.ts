@@ -25,10 +25,19 @@ class GameActor {
     this.playerIndex = playerIndex;
   }
 
-  canChooseTeam(
-    missionIndex: Game.Mission.Index,
-    roundIndex: Game.Mission.Round.Index,
-  ): boolean {
+  hasSeenRole() {
+    const player = this.doc.data.players[this.playerIndex]!;
+    return !!player.hasSeenRole;
+  }
+
+  seeRole() {
+    const value: Game.Data.getPlayerKey.valueType['hasSeenRole'] = true;
+    this.doc.update({
+      [Game.Data.getPlayerKey(this.playerIndex) + '.hasSeenRole']: value,
+    });
+  }
+
+  canChooseTeam(missionIndex: Game.Mission.Index, roundIndex: Game.Mission.Round.Index): boolean {
     const { info } = this;
     const [i, j] = info.getLatestMissionAndRoundIndices();
     if (i !== missionIndex || j !== roundIndex) {
@@ -61,8 +70,7 @@ class GameActor {
     const candidateAttributes = candidateAttributesData!;
     if (
       !!!candidateAttributes.inTeam &&
-      info.getMissionRoundWorkingTeamSize(i, j)! >=
-        info.getTeamSizeForMission(i)
+      info.getMissionRoundWorkingTeamSize(i, j)! >= info.getTeamSizeForMission(i)
     ) {
       return false;
     }
@@ -80,35 +88,24 @@ class GameActor {
       return 'cannot';
     }
     // At this point we can assume round `[i, j]` has had its data initialized.
-    const { inTeam: inTeamBefore } = info.getMissionRoundPlayerAttributes(
-      i,
-      j,
-      k,
-    )!;
+    const { inTeam: inTeamBefore } = info.getMissionRoundPlayerAttributes(i, j, k)!;
     const inTeamAfter: Game.Mission.Round.PlayerAttributes['inTeam'] = inTeamBefore
       ? ((FieldValue.delete() as unknown) as undefined)
       : true;
-    const candidateInTeamKey =
-      Game.Data.getMissionRoundPlayerAttributesKey(i, j, k) + '.inTeam';
+    const candidateInTeamKey = Game.Data.getMissionRoundPlayerAttributesKey(i, j, k) + '.inTeam';
     const candidateInTeamData: Game.Data.getMissionRoundPlayerAttributesKey.valueType['inTeam'] = inTeamAfter;
     this.doc.update({ [candidateInTeamKey]: candidateInTeamData });
     return 'attempted';
   }
 
-  canDecideOnTeam(
-    missionIndex: Game.Mission.Index,
-    roundIndex: Game.Mission.Round.Index,
-  ): boolean {
+  canDecideOnTeam(missionIndex: Game.Mission.Index, roundIndex: Game.Mission.Round.Index): boolean {
     const { info } = this;
     const [i, j] = [missionIndex, roundIndex];
     if (!!!this.canChooseTeam(i, j)) {
       return false;
     }
     // At this point we can assume `[i, j]` refers to a round with data properly initialized.
-    if (
-      info.getMissionRoundWorkingTeamSize(i, j)! !==
-      info.getTeamSizeForMission(i)
-    ) {
+    if (info.getMissionRoundWorkingTeamSize(i, j)! !== info.getTeamSizeForMission(i)) {
       return false;
     }
     return true;
@@ -123,8 +120,7 @@ class GameActor {
       return 'cannot';
     }
     const teamStatusKey = Game.Data.getMissionRoundKey(i, j) + '.teamStatus';
-    const teamStatusData: Game.Data.getMissionRoundKey.valueType['teamStatus'] =
-      'decided';
+    const teamStatusData: Game.Data.getMissionRoundKey.valueType['teamStatus'] = 'decided';
     this.doc.update({ [teamStatusKey]: teamStatusData });
     return 'attempted';
   }
@@ -142,11 +138,7 @@ class GameActor {
     if (vote === 'reject' && j === info.getRoundCountForMission(i) - 1) {
       return false;
     }
-    const myAttributes = info.getMissionRoundPlayerAttributes(
-      i,
-      j,
-      this.playerIndex,
-    );
+    const myAttributes = info.getMissionRoundPlayerAttributes(i, j, this.playerIndex);
     return !!!(myAttributes as Game.Mission.Round.PlayerAttributes).vote;
   }
 
@@ -159,8 +151,7 @@ class GameActor {
     if (!!!this.canSubmitVote(i, j, vote)) {
       return 'cannot';
     }
-    const myVoteKey =
-      Game.Data.getMissionRoundPlayerAttributesKey(i, j, k) + '.vote';
+    const myVoteKey = Game.Data.getMissionRoundPlayerAttributesKey(i, j, k) + '.vote';
     const myVoteData: Game.Data.getMissionRoundPlayerAttributesKey.valueType['vote'] = vote;
     this.doc.update({ [myVoteKey]: myVoteData });
     return 'attempted';
@@ -179,17 +170,9 @@ class GameActor {
     if (bid === 'fail' && info.getPlayerFaction(this.playerIndex) === 'good') {
       return false;
     }
-    const myAttributes = info.getMissionRoundPlayerAttributes(
-      i,
-      j,
-      this.playerIndex,
-    );
+    const myAttributes = info.getMissionRoundPlayerAttributes(i, j, this.playerIndex);
     const { inTeam, bid: alreadyBid } = myAttributes!;
-    return (
-      info.getMissionRoundTeamStatus(i, j) === 'decided' &&
-      !!!alreadyBid &&
-      !!inTeam
-    );
+    return info.getMissionRoundTeamStatus(i, j) === 'decided' && !!!alreadyBid && !!inTeam;
   }
   submitBid(
     missionIndex: Game.Mission.Index,
@@ -200,8 +183,7 @@ class GameActor {
     if (!!!this.canSubmitBid(i, j, bid)) {
       return 'cannot';
     }
-    const myBidKey =
-      Game.Data.getMissionRoundPlayerAttributesKey(i, j, k) + '.bid';
+    const myBidKey = Game.Data.getMissionRoundPlayerAttributesKey(i, j, k) + '.bid';
     const myBidData: Game.Data.getMissionRoundPlayerAttributesKey.valueType['bid'] = bid;
     this.doc.update({ [myBidKey]: myBidData });
     return 'attempted';

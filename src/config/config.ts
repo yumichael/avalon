@@ -25,3 +25,15 @@ initFirestorter({ firebase });
 // configureDevtool({
 //   // Insert configurations.
 // });
+
+// https://github.com/firebase/firebase-js-sdk/issues/97
+import { YellowBox } from 'react-native';
+import clone from 'lodash/clone';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const theConsole = clone(console);
+console.warn = (message: string) => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    theConsole.warn(message);
+  }
+};

@@ -1,19 +1,20 @@
 import React from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
-import { StyleSheet, IconButton } from 'src/library/ui/components';
+import { StyleSheet, ToggleButton } from 'src/library/ui/components';
 import { useColors } from 'src/components/bits';
 
-let NewGameButtonX: React.FC<{ callback: () => void; isActivated: boolean }> = ({
-  callback,
-  isActivated,
-}) => {
+let NewGameButtonX: React.FC<{
+  callback: () => void;
+  beenActivated: boolean;
+}> = ({ callback, beenActivated }) => {
   const colors = useColors();
   return (
-    <IconButton
+    <ToggleButton
       onPress={callback}
-      icon={'games'}
-      color={isActivated ? colors.concern.passive : colors.concern.active}
+      icon="games"
+      color={beenActivated ? colors.room.passive : colors.concern.active}
+      status={beenActivated ? 'checked' : 'unchecked'}
       style={styles.default}
     />
   );

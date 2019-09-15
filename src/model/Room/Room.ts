@@ -73,6 +73,7 @@ namespace Room {
       readonly canLeave: boolean;
       readonly canInvite: boolean;
       readonly canRemoveOthers: boolean;
+      readonly canSetDirector: boolean;
       readonly canSit: boolean;
       readonly canStand: boolean;
       readonly canSetSeatCount: boolean;
@@ -86,6 +87,7 @@ namespace Room {
       canLeave: true,
       canInvite: true,
       canRemoveOthers: false,
+      canSetDirector: false,
       canSit: true,
       canStand: true,
       canSetSeatCount: false,
@@ -99,6 +101,7 @@ namespace Room {
       canLeave: false,
       canInvite: true,
       canRemoveOthers: true,
+      canSetDirector: true,
       canSit: true,
       canStand: true,
       canSetSeatCount: true,

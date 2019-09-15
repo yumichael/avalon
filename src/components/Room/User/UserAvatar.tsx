@@ -1,16 +1,18 @@
 import React from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
-import User from 'src/model/User/User';
+import User, { getUserAvatarUri } from 'src/model/User/User';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Avatar } from 'src/library/ui/components';
 import { StyleProp, TextStyle } from 'react-native';
 
-let UserAvatarX: React.FC<{ userRef?: User.Ref; size?: number; style?: StyleProp<TextStyle> }> = ({
+let UserAvatarX: React.FC<{ userRef: User.Ref; size?: number; style?: StyleProp<TextStyle> }> = ({
   userRef,
   size,
   style,
 }) => {
-  return <Avatar.Text label={userRef ? userRef.id.slice(0, 3) : '---'} size={size} style={style} />;
+  const avatarUri = getUserAvatarUri(userRef);
+  const picture = avatarUri ? { uri: avatarUri } : null;
+  return picture ? <Avatar.Image source={picture} size={size} style={style} /> : null;
 };
 UserAvatarX = observerWithMeta(loggedReactFC()(UserAvatarX));
 

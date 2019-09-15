@@ -1,10 +1,13 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { ScrollView, StyleSheet, Text, Button } from 'src/library/ui/components';
 import { useColors } from 'src/components/bits';
+import SecretsView from '../state/SecretsView';
+import { GameContext } from '../GameContexts';
 
-let GameHelpX: React.FC = () => {
+let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
+  const { gameApi } = useContext(GameContext);
   const colors = useColors();
   return (
     <>
@@ -21,9 +24,29 @@ let GameHelpX: React.FC = () => {
           dolor sit amet..", comes from a line in section 1.10.32.
         </Text>
       </ScrollView>
-      <Button color={colors.concern.active} style={styles.button}>
-        VIEW ROLE
-      </Button>
+      {gameApi.info.getGameFinish() ? null : !!!secretsView.isViewingRoleInfo() ? (
+        <Button
+          icon="visibility"
+          color={
+            !!!gameApi.act || gameApi.act.hasSeenRole()
+              ? colors.room.passive
+              : colors.concern.active
+          }
+          onPress={secretsView.viewRoleInfo}
+          style={styles.button}
+        >
+          view role
+        </Button>
+      ) : (
+        <Button
+          icon="visibility-off"
+          color={colors.room.passive}
+          onPress={secretsView.stopViewingRoleInfo}
+          style={styles.button}
+        >
+          close view
+        </Button>
+      )}
     </>
   );
 };

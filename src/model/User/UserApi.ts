@@ -4,12 +4,7 @@ import Database from 'src/library/Database';
 import DocApi from 'src/library/patterns/DocApi';
 import Room from '../Room/Room';
 import RoomApi from '../Room/RoomApi';
-import {
-  loggedMethod,
-  loggedConstructor,
-  logged,
-  loggingBody,
-} from 'src/library/logging/loggers';
+import { loggedMethod, loggedConstructor, logged, loggingBody } from 'src/library/logging/loggers';
 
 const { FieldValue } = Database;
 
@@ -26,10 +21,7 @@ class UserApi implements DocApi<User.Ref> {
     return new UserApi.Initiator(specs);
   }
 
-  constructor(
-    contract: DocApi.WillWaitUntilDocHasDataContract,
-    specs: UserApi.Specs,
-  ) {
+  constructor(contract: DocApi.WillWaitUntilDocHasDataContract, specs: UserApi.Specs) {
     this.contract = contract;
     User.dataApi.openNewDoc(specs.userRef);
     this.ref = specs.userRef;
@@ -38,7 +30,7 @@ class UserApi implements DocApi<User.Ref> {
 
   @loggedMethod()
   getDataState(this: UserApi): User.Data.State {
-    return this.doc.hasData ? 'ready' : 'loading';
+    return this.doc && this.doc.hasData ? 'ready' : 'loading';
   }
 
   // ATTENTION! Every method below MUST NOT be called before the data is synced from Firebase.
@@ -78,10 +70,7 @@ class UserApi implements DocApi<User.Ref> {
     if (!!!this.canEnterRoom()) {
       return 'cannot';
     }
-    if (
-      !!!this.doc.data.activity ||
-      !!!this.doc.data.activity.roomRef.isEqual(roomRef)
-    ) {
+    if (!!!this.doc.data.activity || !!!this.doc.data.activity.roomRef.isEqual(roomRef)) {
       const activity: User.Data['activity'] = { roomRef };
       this.doc.update({ activity });
     }
@@ -119,8 +108,7 @@ class UserApi implements DocApi<User.Ref> {
       const { roomRef } = activityData;
       if (
         !!!this.userActivity ||
-        (this.userActivity &&
-          !!!roomRef.isEqual(this.userActivity.getRoomRef()))
+        (this.userActivity && !!!roomRef.isEqual(this.userActivity.getRoomRef()))
       ) {
         logged({ $path: '`new UserActivity`' });
         this.userActivity = new UserActivity(this.contract, this.ref);
@@ -137,11 +125,9 @@ namespace UserApi {
     export type Cannot = 'cannot';
   }
 
-  export class Initiator extends DocApi.Initiator.createSubclass<
-    User.Ref,
+  export class Initiator extends DocApi.Initiator.createSubclass<User.Ref, UserApi, UserApi.Specs>(
     UserApi,
-    UserApi.Specs
-  >(UserApi) {}
+  ) {}
   export type Specs = {
     userRef: User.Ref;
   };

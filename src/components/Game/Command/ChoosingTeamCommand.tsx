@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Text, View, Button } from 'src/library/ui/components';
-import styles from './CommandStyles';
+import styles from '../../Room/Command/CommandStyles';
 import { useFancyText, useIcons, useColors } from 'src/components/bits';
 
 let ChoosingTeamCommandX: React.FC = () => {
@@ -41,7 +41,7 @@ let ChoosingTeamCommandX: React.FC = () => {
       <View style={styles.actions}>
         {act.canDecideOnTeam(i, j) ? (
           <Button icon={icons.leader.default} color={colors.leader.active} onPress={decide}>
-            yes
+            confirm team
           </Button>
         ) : null}
       </View>

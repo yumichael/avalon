@@ -19,8 +19,8 @@ GameTrackerX = observerWithMeta(loggedReactFC()(GameTrackerX));
 const styles = StyleSheet.create({
   default: {
     flex: 1,
-    padding: 3,
-    justifyContent: 'space-evenly',
+    // padding: 2,
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

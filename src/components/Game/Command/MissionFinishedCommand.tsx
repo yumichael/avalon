@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Text, View } from 'src/library/ui/components';
-import styles from './CommandStyles';
+import styles from '../../Room/Command/CommandStyles';
 import { useFancyText } from 'src/components/bits';
 
 let MissionFinishedCommandX: React.FC = () => {

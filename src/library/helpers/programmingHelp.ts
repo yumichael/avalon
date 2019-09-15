@@ -85,7 +85,7 @@ export const inspect = Inspect.inspect;
 
 export const summarizeAsString = (o: Object) => inspect(o, { depth: 1, maxArrayLength: 10 });
 export const describeAsString = (o: Object) => inspect(o, { depth: 2, maxArrayLength: 50 });
-// export const detailAsString = (o: Object) => inspect(o, { showHidden: true, depth: 2 });
+export const detailAsString = (o: Object) => inspect(o, { depth: 5 });
 
 export function makeRandomString({ length }: { length: number }) {
   let result = '';

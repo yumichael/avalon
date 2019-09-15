@@ -4,12 +4,15 @@ import Room from 'src/model/Room/Room';
 import { RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { IconButton, StyleSheet } from 'src/library/ui/components';
-import { useColors } from 'src/components/bits';
+import { useColors, useIcons } from 'src/components/bits';
 
-const iconPropsMap = {
-  sit: { icon: 'airline-seat-legroom-extra' },
-  stand: { icon: 'airline-seat-legroom-reduced' },
-};
+function useIconPropsMap() {
+  const icons = useIcons();
+  return {
+    sit: { icon: icons.sit.default },
+    stand: { icon: icons.stand.default },
+  };
+}
 
 let SitOrStandX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) => {
   const { roomApiInit } = useContext(RoomContext);
@@ -24,6 +27,7 @@ let SitOrStandX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) => {
       : null;
 
   const colors = useColors();
+  const iconPropsMap = useIconPropsMap();
   return iconPropsKey ? (
     <IconButton
       icon={iconPropsMap[iconPropsKey].icon}

@@ -19,7 +19,16 @@ export namespace StyleSheet {
 
 export { TextInput, Text, KeyboardAvoidingView, View, ScrollView, FlatList } from 'react-native';
 
-export { Card, IconButton, Button, Avatar, TouchableRipple, Chip } from 'react-native-paper';
+export {
+  Card,
+  IconButton,
+  Button,
+  ToggleButton,
+  Avatar,
+  TouchableRipple,
+  Chip,
+  Badge,
+} from 'react-native-paper';
 
 export { NavigationScreenComponent, NavigationContainer } from 'react-navigation';
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useContext, ReactElement, useCallback, useEffect } from 'react';
+import React, { useMemo, useContext, ReactElement, useEffect } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { RoomContext, PlayingContext } from './RoomContexts';
 import GameApi from 'src/model/Game/GameApi';
@@ -10,24 +10,17 @@ import RoomBannerX from './Banner/RoomBanner';
 import RoomChatX from './Chat/RoomChat';
 import RoomCommandX from './Command/RoomCommand';
 import Room from 'src/model/Room/Room';
-import { useHardMemo, useKeyboard, useStates } from 'src/library/helpers/reactHelp';
+import { useHardMemo, useKeyboard } from 'src/library/helpers/reactHelp';
 import { UserContext } from '../UserContexts';
-import GameXInjection from '../Game/GameXInjection';
+import GameXInsert from '../Game/GameXInsert';
 import SeatX from './Seats/Seat';
-import NewGameButtonX from './NewGame/NewGameButton';
-import NewGameMenuX from './NewGame/NewGameMenu';
-import GameHelpX from '../Game/Help/GameHelp';
-
-export type RoomXState = {
-  isAssigningDirector: boolean;
-  isViewingGame: boolean;
-  isViewingNewGameMenu: boolean;
-  isViewingGameHelp: boolean;
-};
+import NewGameMenuXInsert from './NewGame/NewGameMenuXInsert';
+import RoomXState from './RoomXState';
+import AccessoryBarX from './Accessory/AccessoryBar';
 
 type RoomXProps = {
   roomRef: Room.Ref;
-  accessoryButton?: ReactElement | null;
+  accessoryBar?: ReactElement | null;
 };
 let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
   const { userApiInit } = useContext(UserContext);
@@ -37,7 +30,6 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
     [roomRef.path, userApiInit.ref.path],
   );
   const roomApi = roomApiInit.readyInstance;
-  const roomContextValue = useMemo(() => ({ roomApiInit }), [roomApiInit]);
   const playing = roomApi && roomApi.playing;
 
   const gameApiInit = useHardMemo<GameApi.Initiator | undefined>(
@@ -45,69 +37,52 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
     [playing],
   );
   const gameApi = gameApiInit && gameApiInit.readyInstance;
-  const gameXInjection = useHardMemo<GameXInjection | undefined>(
-    () => gameApi && new GameXInjection(gameApi),
+  const gameXInsert = useHardMemo<GameXInsert | undefined>(
+    () => gameApi && new GameXInsert(gameApi),
     [gameApi],
   );
   const playingContextValue = useMemo(
     () => ({
       playing,
-      gameXInjection,
+      gameXInsert,
     }),
-    [playing, gameXInjection],
+    [playing, gameXInsert],
   );
   const gameFinish = playing && playing.getFinish();
 
   // room UI state
 
-  const usingRoomXState = useStates<RoomXState>({
-    isAssigningDirector: false,
-    isViewingGame: false,
-    isViewingNewGameMenu: false,
-    isViewingGameHelp: false,
-  });
+  const state = useHardMemo(() => new RoomXState(), [roomRef]);
+  const roomContextValue = useMemo(() => ({ roomApiInit, state }), [roomApiInit]);
 
-  const [isViewingGame, setIsViewingGame] = usingRoomXState.isViewingGame;
-  if (!!!isViewingGame && gameApi && !!!gameFinish) {
-    setIsViewingGame(true);
+  if (gameApi && !!!gameFinish && !!!state.isViewingGame()) {
+    state.viewGame();
   }
+  useEffect(state.stopAssigningDirector, [
+    roomApi && roomApi.getDirector().isEqual(roomApi.userRef),
+  ]);
+  useEffect(state.stopViewingNewGameMenu, [gameApi]);
+  useEffect(state.stopViewingGameHelp, [gameApi]);
 
-  const [isViewingNewGameMenu, setIsViewingNewGameMenu] = usingRoomXState.isViewingNewGameMenu;
-  useEffect(() => setIsViewingNewGameMenu(false), [gameApi]);
-  const toggleViewingNewGameMenu = useCallback(
-    () => setIsViewingNewGameMenu(previousIsViewingNewGameMenu => !!!previousIsViewingNewGameMenu),
-    [setIsViewingNewGameMenu],
+  const accessoryBar = useHardMemo(
+    () => (
+      <RoomContext.Provider value={roomContextValue}>
+        <PlayingContext.Provider value={playingContextValue}>
+          <AccessoryBarX />
+        </PlayingContext.Provider>
+      </RoomContext.Provider>
+    ),
+    [state, roomContextValue, playingContextValue],
   );
-
-  const [isViewingGameHelp, setIsViewingGameHelp] = usingRoomXState.isViewingGameHelp;
-  const toggleViewingGameHelp = useCallback(
-    () => setIsViewingGameHelp(previousIsViewingGameHelp => !!!previousIsViewingGameHelp),
-    [setIsViewingGameHelp],
-  );
-
-  const whichAccessoryButton = isViewingGame
-    ? 'gameHelp'
-    : roomApi && roomApi.canStartNewGame()
-    ? 'newGame'
-    : null;
-  const accessoryButton = useHardMemo(
-    () =>
-      whichAccessoryButton === 'newGame' ? (
-        <NewGameButtonX callback={toggleViewingNewGameMenu} isActivated={isViewingNewGameMenu} />
-      ) : whichAccessoryButton === 'gameHelp' && gameXInjection ? (
-        gameXInjection.getGameHelpButton({
-          callback: toggleViewingGameHelp,
-          isActivated: !!!toggleViewingGameHelp,
-        })
-      ) : null,
-    [whichAccessoryButton, toggleViewingNewGameMenu, isViewingNewGameMenu],
-  );
-  const previousAccessoryButton = navigation.getParam('accessoryButton');
+  // const previousAccessoryButton = navigation.getParam('accessoryButton');
+  // useEffect(() => {
+  //   if (accessoryButton && accessoryButton !== previousAccessoryButton) {
+  //     navigation.setParams({ accessoryButton });
+  //   }
+  // }, [accessoryButton, previousAccessoryButton]);
   useEffect(() => {
-    if (accessoryButton && accessoryButton !== previousAccessoryButton) {
-      navigation.setParams({ accessoryButton });
-    }
-  }, [accessoryButton, previousAccessoryButton]);
+    navigation.setParams({ accessoryBar });
+  }, [accessoryBar]);
 
   const keyboard = useKeyboard();
   const attentionStyle = useMemo(
@@ -125,6 +100,8 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
     [keyboard],
   );
 
+  const newGameMenuXInsert = useHardMemo(() => new NewGameMenuXInsert(), [state]);
+
   return roomContextValue ? (
     <View style={styles.default}>
       <RoomContext.Provider value={roomContextValue}>
@@ -132,7 +109,7 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
           <KeyboardAvoidingView behavior="padding" style={attentionStyle}>
             {!!!keyboard ? (
               <View style={styles.banner}>
-                <RoomBannerX usingRoomXState={usingRoomXState} />
+                <RoomBannerX />
               </View>
             ) : null}
             <View style={centerStyle}>
@@ -145,7 +122,11 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
               <View style={styles.middle}>
                 <SeatX seatIndex={0} />
                 <View style={styles.dialog}>
-                  {isViewingGameHelp ? <GameHelpX /> : <RoomChatX />}
+                  {state.isViewingGameHelp() && gameXInsert ? (
+                    gameXInsert.getGameHelp()
+                  ) : (
+                    <RoomChatX />
+                  )}
                 </View>
                 <SeatX seatIndex={5} />
               </View>
@@ -158,14 +139,14 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
             </View>
             {!!!keyboard ? (
               <View style={styles.command}>
-                {isViewingNewGameMenu ? (
-                  <NewGameMenuX />
-                ) : (
-                  <RoomCommandX usingRoomXState={usingRoomXState} />
-                )}
+                <RoomCommandX
+                  startNewGame={
+                    state.isViewingNewGameMenu() ? newGameMenuXInsert.getStartNewGame() : null
+                  }
+                />
               </View>
             ) : null}
-            {gameXInjection ? gameXInjection.getHostWorker() : undefined}
+            {gameXInsert ? gameXInsert.getHostWorker() : undefined}
           </KeyboardAvoidingView>
         </PlayingContext.Provider>
       </RoomContext.Provider>
@@ -180,10 +161,10 @@ RoomX.navigationOptions = loggedFunction({ name: 'RoomX.navigationOptions' })(
   }: {
     navigation: NavigationScreenProp<NavigationRoute<RoomXProps>, RoomXProps>;
   }) => {
-    const accessoryButton = navigation.getParam('accessoryButton');
+    const accessoryBar = navigation.getParam('accessoryBar');
     return {
       ...defaultNavigationOptions,
-      ...(accessoryButton ? { headerRight: accessoryButton } : null),
+      ...(accessoryBar ? { headerRight: accessoryBar } : null),
     };
   },
 );

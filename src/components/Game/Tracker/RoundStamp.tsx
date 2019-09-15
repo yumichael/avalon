@@ -1,12 +1,11 @@
-import React, { useContext, useCallback, useMemo } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext } from '../GameContexts';
 import RoundView from '../state/RoundView';
 import Game from 'src/model/Game/Game';
 import { loggedReactFC } from 'src/library/logging/loggers';
-import { StyleSheet, View, IconButton, Text } from 'src/library/ui/components';
+import { StyleSheet, View, ToggleButton } from 'src/library/ui/components';
 import { useColors, useAlphas } from 'src/components/bits';
-import { ViewStyle } from 'react-native';
 
 let RoundStampX: React.FC<{
   roundView: RoundView;
@@ -14,7 +13,7 @@ let RoundStampX: React.FC<{
   roundIndex: Game.Mission.Index;
 }> = ({ roundView, missionIndex: i, roundIndex: j }) => {
   const { info } = useContext(GameContext).gameApi;
-  const [iViewing, jViewing] = roundView.getProperIndices(info);
+  const [iViewing, jViewing] = roundView.getIndices();
   let shouldReturnNothing: boolean = false; // Need this to have the React hooks always run.
   if (i !== iViewing) {
     shouldReturnNothing = true;
@@ -23,36 +22,40 @@ let RoundStampX: React.FC<{
   if (jLatest === undefined) {
     shouldReturnNothing = true;
   }
-  const jToView = jLatest === j ? 'latest' : j;
-  const viewRound = useCallback(() => roundView.setRound(jToView), [roundView, jToView]);
+  const viewRound = useCallback(() => roundView.setRound(j), [roundView, j]);
   const voteOutcome = info.getMissionRoundVoteOutcome(i, j);
+  const theRoundCountForMission = info.getRoundCountForMission(i);
 
-  const countIcon = useCallback(
-    ({ size, color }: { size?: number; color?: string }) => (
-      <Text style={{ fontSize: size, color }}>{j + 1}</Text>
-    ),
-    [i],
-  );
+  // TODO remove commented out code.
+  // const countIcon = useCallback(
+  //   ({ size, color }: { size?: number; color?: string }) => (
+  //     <Text style={{ fontSize: size, color }}>{j + 1}</Text>
+  //   ),
+  //   [i],
+  // );
   const colors = useColors();
   const alphas = useAlphas();
-  const viewingStyle = useViewingStyle();
+  // const viewingStyle = useViewingStyle();
   return (
     <View style={styles.default}>
-      {j === jViewing ? <View style={viewingStyle} /> : null}
+      {/*j === jViewing ? <View style={viewingStyle} /> : null*/
+      /* TODO get rid of commented out code in this file */}
       {shouldReturnNothing ? null : (
-        <IconButton
-          icon={countIcon}
+        <ToggleButton
+          icon={j < theRoundCountForMission - 1 ? 'chevron-right' : 'last-page'}
           color={
             voteOutcome
               ? colors[voteOutcome].default
               : j === jLatest
               ? colors.concern.active
-              : j < info.getRoundCountForMission(i) - 1
+              : j < theRoundCountForMission - 1
               ? colors.concern.passive + alphas.future.default
               : colors.approve.default + alphas.future.default
           }
           onPress={viewRound}
+          status={j === jViewing ? 'checked' : 'unchecked'}
           disabled={j > jLatest!}
+          style={styles.selection}
         />
       )}
     </View>
@@ -66,23 +69,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  selection: {
+    width: 38,
+    height: 38,
+  },
 });
-function useViewingStyle() {
-  const colors = useColors();
-  const alphas = useAlphas();
-  return useMemo<ViewStyle>(
-    () => ({
-      alignSelf: 'center',
-      position: 'absolute',
-      height: 32,
-      width: 32,
-      backgroundColor: colors.room.passive + alphas.highlight.default,
-      borderWidth: 1,
-      borderColor: colors.room.passive,
-      zIndex: -1,
-    }),
-    [colors, alphas],
-  );
-}
+// function useViewingStyle() {
+//   const colors = useColors();
+//   const alphas = useAlphas();
+//   return useMemo<ViewStyle>(
+//     () => ({
+//       alignSelf: 'center',
+//       position: 'absolute',
+//       height: 32,
+//       width: 32,
+//       backgroundColor: colors.room.passive + alphas.highlight.default,
+//       borderWidth: 1,
+//       borderColor: colors.room.passive,
+//       zIndex: -1,
+//     }),
+//     [colors, alphas],
+//   );
+// }
 
 export default RoundStampX;

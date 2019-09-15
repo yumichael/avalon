@@ -1,10 +1,10 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Button, Text, View } from 'src/library/ui/components';
-import styles from './CommandStyles';
-import { useColors, useFancyText, useIcons } from 'src/components/bits';
+import styles from '../../Room/Command/CommandStyles';
+import { useColors, useFancyText, useIcons, timeDurations } from 'src/components/bits';
 
 let BidCommandX: React.FC = () => {
   const { act, info } = useContext(GameContext).gameApi;
@@ -12,6 +12,21 @@ let BidCommandX: React.FC = () => {
   const bidSuccess = useCallback(() => act!.submitBid(i, j, 'success'), [act, i, j]);
   const bidFail = useCallback(() => act!.submitBid(i, j, 'fail'), [act, i, j]);
   const attr = act && info.getMissionRoundPlayerAttributes(i, j, act.playerIndex);
+
+  const [bidsReveal, setBidsReveal] = useState<null | 1 | 2>(null);
+  const revealBids = useCallback(
+    () => setBidsReveal((1 + Math.floor(Math.random() * 2)) as 1 | 2),
+    [setBidsReveal],
+  );
+  useEffect(() => {
+    if (bidsReveal) {
+      const timeout = setTimeout(() => setBidsReveal(null), timeDurations.viewBids);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+    return undefined;
+  }, [bidsReveal, setBidsReveal]);
 
   const colors = useColors();
   const fancyText = useFancyText();
@@ -21,6 +36,26 @@ let BidCommandX: React.FC = () => {
       The {fancyText.team} proposal was rejected by {fancyText.vote}.
     </Text>
   );
+  const buttons = [
+    <Button
+      key="success"
+      icon={icons.success.default}
+      color={colors.good.default}
+      onPress={bidSuccess}
+      disabled={!!!act!.canSubmitBid(i, j, 'success')}
+    >
+      success
+    </Button>,
+    <Button
+      key="fail"
+      icon={icons.fail.default}
+      color={colors.evil.default}
+      onPress={bidFail}
+      disabled={!!!act!.canSubmitBid(i, j, 'fail')}
+    >
+      fail
+    </Button>,
+  ];
   return !!!rejected ? (
     act ? (
       <>
@@ -39,24 +74,23 @@ let BidCommandX: React.FC = () => {
           {attr && attr.bid ? (
             <Text style={styles.text}>You already submitted your {fancyText.bid}.</Text>
           ) : act.canSubmitBid(i, j) ? (
-            <View style={styles.actions}>
-              <Button
-                icon={icons.success.default}
-                color={colors.good.default}
-                onPress={bidSuccess}
-                disabled={!!!act.canSubmitBid(i, j, 'success')}
-              >
-                success
-              </Button>
-              <Button
-                icon={icons.fail.default}
-                color={colors.evil.default}
-                onPress={bidFail}
-                disabled={!!!act.canSubmitBid(i, j, 'fail')}
-              >
-                fail
-              </Button>
-            </View>
+            bidsReveal ? (
+              <View style={styles.actions}>
+                {buttons[2 - bidsReveal]}
+                {buttons[bidsReveal - 1]}
+              </View>
+            ) : (
+              <View style={styles.actions}>
+                <Button
+                  key="reveal"
+                  icon="visibility"
+                  color={colors.team.default}
+                  onPress={revealBids}
+                >
+                  reveal shuffled bids
+                </Button>
+              </View>
+            )
           ) : null}
         </View>
       </>
@@ -68,11 +102,6 @@ let BidCommandX: React.FC = () => {
         </Text>
       </View>
     )
-  ) : act ? (
-    <>
-      <View style={styles.instructions}>{rejected}</View>
-      <View style={styles.actions} />
-    </>
   ) : (
     <View style={styles.spectating}>{rejected}</View>
   );

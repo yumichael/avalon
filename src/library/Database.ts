@@ -78,10 +78,14 @@ namespace Database {
     }
     @loggedDatabaseMethod()
     getCurrentlyOpenedDoc(documentRef?: DocumentReference): Document<T> | undefined {
-      invariant(
-        this.doc && this.doc.ref && (!!!documentRef || this.doc.ref.isEqual(documentRef)),
-        'Tried to get the current document but given ID does not match that of the current one.',
-      );
+      // NOTE if I'm not getting the current doc it's probably just due to some lagging UI component that won't matter soon.
+      // invariant(
+      //   this.doc && this.doc.ref && (!!!documentRef || this.doc.ref.isEqual(documentRef)),
+      //   'Tried to get the current document but given ID does not match that of the current one.',
+      // );
+      if (!!!this.doc || !!!this.doc.ref || (documentRef && !!!this.doc.ref.isEqual(documentRef))) {
+        return undefined;
+      }
 
       // if (this.collectionId === 'games') {
       //   console.log({

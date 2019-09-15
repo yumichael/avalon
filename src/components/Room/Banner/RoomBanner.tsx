@@ -1,23 +1,14 @@
-import React, { useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
-import { PlayingContext } from '../RoomContexts';
+import { PlayingContext, RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Card, StyleSheet, TouchableRipple, View, Text } from 'src/library/ui/components';
-import { RoomXState } from '../Room';
-import { UsingStates } from 'src/library/helpers/reactHelp';
 import { useColors } from 'src/components/bits';
 import { TextStyle } from 'react-native';
 
-let RoomBannerX: React.FC<{
-  usingRoomXState: UsingStates<RoomXState>;
-}> = ({
-  usingRoomXState: {
-    isViewingGame: [isViewingGame, setIsViewingGame],
-    isViewingNewGameMenu: [isViewingNewGameMenu, setIsViewingNewGameMenu],
-  },
-}) => {
-  const { gameXInjection, playing } = useContext(PlayingContext);
-  const viewGame = useCallback(() => setIsViewingGame(true), [setIsViewingGame]);
+let RoomBannerX: React.FC = () => {
+  const { state } = useContext(RoomContext);
+  const { gameXInsert, playing } = useContext(PlayingContext);
   const gameFinish = playing && playing.getFinish();
 
   const colors = useColors();
@@ -25,7 +16,7 @@ let RoomBannerX: React.FC<{
     () => ({
       ...styles.container,
       ...(gameFinish
-        ? isViewingGame
+        ? state.isViewingGame()
           ? styles.viewingContainer
           : {
               ...styles.gameFinishContainer,
@@ -37,15 +28,15 @@ let RoomBannerX: React.FC<{
         ? null
         : { ...styles.gameFinishContainer, borderColor: colors.game.default }),
     }),
-    [playing, gameFinish, isViewingGame],
+    [playing, gameFinish, state.isViewingGame()],
   );
   const overlayStyle = useMemo(() => ({ ...styles.container, ...styles.touchOverlay }), []);
   const titleTextStyle = useTitleTextStyle();
   return (
     <>
       <Card style={bannerStyle}>
-        {gameXInjection ? (
-          gameXInjection.getGameTracker()
+        {gameXInsert ? (
+          gameXInsert.getGameTracker()
         ) : (
           <>
             <View style={styles.space} />
@@ -54,8 +45,8 @@ let RoomBannerX: React.FC<{
           </>
         )}
       </Card>
-      {!!!isViewingGame && gameFinish ? (
-        <TouchableRipple onPress={viewGame} style={overlayStyle}>
+      {!!!state.isViewingGame() && gameFinish ? (
+        <TouchableRipple onPress={state.viewGame} style={overlayStyle}>
           <View style={overlayStyle} />
         </TouchableRipple>
       ) : null}
@@ -67,6 +58,7 @@ RoomBannerX = observerWithMeta(loggedReactFC()(RoomBannerX));
 const styles = StyleSheet.create({
   container: {
     flex: 1, // TODO make position absolute with 100% height+width if buggy.
+    padding: 1,
   },
   touchOverlay: {
     position: 'absolute',
@@ -75,6 +67,7 @@ const styles = StyleSheet.create({
   },
   gameFinishContainer: {
     borderWidth: 1,
+    padding: 0,
   },
   viewingContainer: {
     // borderWidth: 1,

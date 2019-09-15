@@ -34,7 +34,7 @@ let LoginX: NavigationScreenComponent = ({ navigation }) => {
     </KeyboardUsingView>
   );
 };
-LoginX = loggedReactFC()(LoginX);
+LoginX = loggedReactFC({ disable: false })(LoginX);
 
 const styles = StyleSheet.create({
   screen: {

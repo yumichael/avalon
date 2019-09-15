@@ -2,30 +2,43 @@ import { observable, action } from 'mobx';
 import GameInformer from 'src/model/Game/GameInformer';
 import Game from 'src/model/Game/Game';
 import { loggedConstructor, loggedMethod, loggingDisabled } from 'src/library/logging/loggers';
+import autobind from 'autobind-decorator';
+import GameApi from 'src/model/Game/GameApi';
 
 @loggedConstructor()
+@autobind
 class RoundView {
-  @observable missionIndex: RoundView.MissionIndex = 'latest';
-  @observable roundIndex: RoundView.RoundIndex = 'latest';
+  private readonly info: GameInformer;
+  constructor(gameApi: GameApi) {
+    this.info = gameApi.info;
+  }
+
+  @observable private missionIndex: Game.Mission.Index = 0;
+  @observable private roundIndex: Game.Mission.Round.Index = 0;
   @action setMission(missionIndex: RoundView.MissionIndex) {
+    const ii = this.info.getLatestMissionIndex();
+    if (missionIndex === 'latest' || missionIndex > ii) {
+      missionIndex = ii;
+    }
     this.missionIndex = missionIndex;
-    this.roundIndex = 'latest';
+    this.roundIndex = this.info.getLatestMissionRoundIndex(missionIndex)!;
   }
   @action setRound(roundIndex: RoundView.RoundIndex) {
+    let jj = this.info.getLatestMissionRoundIndex(this.missionIndex);
+    jj = jj === undefined ? 0 : jj;
+    if (roundIndex === 'latest' || roundIndex > jj) {
+      roundIndex = jj!;
+    }
     this.roundIndex = roundIndex;
   }
-  @loggedMethod({ ...loggingDisabled }) getProperIndices(
-    info: GameInformer,
-  ): [Game.Mission.Index, Game.Mission.Round.Index] {
-    // TODO check if the sticky view logic is what you want?
-    const ii =
-      this.missionIndex !== 'latest' && this.missionIndex > info.getLatestMissionIndex()
-        ? 'latest'
-        : this.missionIndex;
-    const jj = this.roundIndex;
-    const i = ii === 'latest' ? info.getLatestMissionIndex() : ii;
-    const j = jj === 'latest' ? info.getLatestMissionRoundIndex(i)! : jj;
-    return [i, j];
+  @action setCurrent() {
+    this.setMission('latest');
+  }
+  @loggedMethod({ ...loggingDisabled }) getIndices(): [
+    Game.Mission.Index,
+    Game.Mission.Round.Index,
+  ] {
+    return [this.missionIndex, this.roundIndex];
   }
 }
 namespace RoundView {

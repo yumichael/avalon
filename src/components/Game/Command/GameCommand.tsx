@@ -1,16 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { GameContext, RoundContext } from '../GameContexts';
 import ChoosingTeamCommandX from './ChoosingTeamCommand';
 import VoteCommandX from './VoteCommand';
 import BidCommandX from './BidCommand';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
-import { StyleSheet, View } from 'src/library/ui/components';
+import { StyleSheet, View, TouchableRipple } from 'src/library/ui/components';
 import MissionFinishedCommandX from './MissionFinishedCommand';
+import { useColors } from 'src/components/bits';
+import { ViewStyle } from 'react-native';
+import RoundView from '../state/RoundView';
 
-let GameCommandX: React.FC = () => {
+let GameCommandX: React.FC<{ roundView: RoundView }> = ({ roundView }) => {
   const { info } = useContext(GameContext).gameApi;
   const [i, j] = useContext(RoundContext).missionAndRoundIndices;
+  const [iLatest, jLatest] = info.getLatestMissionAndRoundIndices();
   const progress = info.getMissionRoundProgress(i, j);
   const progressState = progress[progress.length - 1];
   const CommandX = {
@@ -19,10 +23,20 @@ let GameCommandX: React.FC = () => {
     finishedVoting: BidCommandX,
     finishedMission: MissionFinishedCommandX,
   }[progressState];
-  return (
-    <View style={styles.default}>
+
+  const moveOnStyle = useMoveOnStyle();
+  const shouldMoveOn: boolean = !!!info.getGameFinish() && (i !== iLatest || j !== jLatest);
+  const element = (
+    <View style={shouldMoveOn ? moveOnStyle : styles.default}>
       <CommandX key={progressState} />
     </View>
+  );
+  return shouldMoveOn ? (
+    <TouchableRipple onPress={roundView.setCurrent} style={styles.touch}>
+      {element}
+    </TouchableRipple>
+  ) : (
+    element
   );
 };
 GameCommandX = observerWithMeta(loggedReactFC()(GameCommandX));
@@ -32,7 +46,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 1,
+  },
+  touch: {
+    flex: 1,
   },
 });
+function useMoveOnStyle() {
+  const colors = useColors();
+  return useMemo<ViewStyle>(
+    () => ({
+      ...styles.default,
+      borderWidth: 1,
+      padding: 0,
+      borderColor: colors.concern.active,
+    }),
+    [colors],
+  );
+}
 
 export default GameCommandX;

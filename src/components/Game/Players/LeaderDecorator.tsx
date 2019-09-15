@@ -15,7 +15,7 @@ let LeaderDecoratorX: React.FC = () => {
   return (
     <View style={styles.default}>
       {k === info.getMissionRoundLeader(i, j) ? (
-        <IconButton icon={icons.leader.default} color={colors.leader.active} />
+        <IconButton icon={icons.leader.default} color={colors.leader.passive} size={36} />
       ) : null}
     </View>
   );

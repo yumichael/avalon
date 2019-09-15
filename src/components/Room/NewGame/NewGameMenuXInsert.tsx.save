@@ -174,7 +174,7 @@ let NewGameMenuX: React.FC = () => {
           color={colors.room.active}
           style={styles.submit}
         >
-          START NEW GAME
+          start new game
         </Button>
       </ScrollView>
     </>

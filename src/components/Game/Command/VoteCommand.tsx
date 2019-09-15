@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { View, Text, Button } from 'src/library/ui/components';
-import styles from './CommandStyles';
+import styles from '../../Room/Command/CommandStyles';
 import { useColors, useFancyText } from 'src/components/bits';
 
 let VoteCommandX: React.FC = () => {
@@ -23,29 +23,27 @@ let VoteCommandX: React.FC = () => {
         </Text>
       </View>
       <View style={styles.actions}>
-        {act.canSubmitVote(i, j) ? (
-          attr && attr.vote ? (
-            <Text style={styles.text}>You already {fancyText.vote}d.</Text>
-          ) : (
-            <View style={styles.actions}>
-              <Button
-                icon="radio-button-unchecked"
-                color={colors.approve.default}
-                onPress={voteApprove}
-                disabled={!!!act.canSubmitVote(i, j, 'approve')}
-              >
-                approve
-              </Button>
-              <Button
-                icon="radio-button-unchecked"
-                color={colors.reject.default}
-                onPress={voteReject}
-                disabled={!!!act.canSubmitVote(i, j, 'reject')}
-              >
-                reject
-              </Button>
-            </View>
-          )
+        {attr && attr.vote ? (
+          <Text style={styles.text}>You already {fancyText.vote}d.</Text>
+        ) : act.canSubmitVote(i, j) ? (
+          <View style={styles.actions}>
+            <Button
+              icon="radio-button-unchecked"
+              color={colors.approve.default}
+              onPress={voteApprove}
+              disabled={!!!act.canSubmitVote(i, j, 'approve')}
+            >
+              approve
+            </Button>
+            <Button
+              icon="radio-button-unchecked"
+              color={colors.reject.default}
+              onPress={voteReject}
+              disabled={!!!act.canSubmitVote(i, j, 'reject')}
+            >
+              reject
+            </Button>
+          </View>
         ) : null}
       </View>
     </>

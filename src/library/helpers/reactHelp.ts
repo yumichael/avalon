@@ -63,6 +63,7 @@ export const useKeyboard = () => {
   return keyboard;
 };
 
+// Deprecated
 export type UsingStates<S> = { [name in keyof S]: [S[name], Dispatch<SetStateAction<S[name]>>] };
 // NOTE in using this hook the initial state must have all keys present always.
 export function useStates<S extends object>(

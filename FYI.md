@@ -34,14 +34,14 @@
     - UI components should only interact with application logic using the Model API classes.
   - What should initiate a Model's API?
     - The top component for a Model should prefer taking a `DocumentReference` to the Model as a prop and initiating the Model API itself.
-    - However, for example in `RoomX` |owns> `RoomPlayingX` |owns> `GameXInjection`, there is already a buffer entity RoomPlaying between the Game Model's components and its owning Model, Room, so it ends up being simpler for RoomPlaying to initiate and own Game's API.
+    - However, for example in `RoomX` |owns> `RoomPlayingX` |owns> `GameXInsert`, there is already a buffer entity RoomPlaying between the Game Model's components and its owning Model, Room, so it ends up being simpler for RoomPlaying to initiate and own Game's API.
   - In general, when an entity is actually a "maybe" version of its "just" self, should the canonical handler (by handler I mean e.g. how a single React component handles the UI for one Model) for it take as argument the "maybe" version or the "just" version?
     - Prefer taking as argument the "maybe" version.
     ###### @ src/components/game/players/\w+Decorator.tsx
     - For one example, look at the `<PlayerAttribute>Decorator` components. - Even if a decorator should not render, it is much easier to have the component itself decide that instead of the component above deciding to maybe or maybe not include it in its component tree.
-    ###### @ src /components/game/GameXInjection.tsx
-    - However, despite `GameXInjection` being the canonical UI class for the Game Model, it takes in "just" `GameApi`.
-      - `GameXInjection` is quite special because its UI pieces need to be individually embedded by its owner.
+    ###### @ src /components/game/GameXInsert.tsx
+    - However, despite `GameXInsert` being the canonical UI class for the Game Model, it takes in "just" `GameApi`.
+      - `GameXInsert` is quite special because its UI pieces need to be individually embedded by its owner.
 
 - What are the product design choices?
 
