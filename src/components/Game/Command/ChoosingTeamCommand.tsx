@@ -4,9 +4,11 @@ import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Text, View, Button } from 'src/library/ui/components';
 import styles from '../../Room/Command/CommandStyles';
-import { useFancyText, useIcons, useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let ChoosingTeamCommandX: React.FC = () => {
+  const { colors, icons, fancyText } = bits;
+
   const { info, act } = useContext(GameContext).gameApi;
   const [i, j] = useContext(RoundContext).missionAndRoundIndices;
   const teamSize = info.getTeamSizeForMission(i);
@@ -15,9 +17,6 @@ let ChoosingTeamCommandX: React.FC = () => {
     remainingSize === teamSize ? 'people' : remainingSize > 1 ? 'more people' : 'more person';
   const decide = useCallback(() => act!.decideOnTeam(i, j), [act, i, j]);
 
-  const colors = useColors();
-  const fancyText = useFancyText();
-  const icons = useIcons();
   return act ? (
     <>
       <View style={styles.instructions}>

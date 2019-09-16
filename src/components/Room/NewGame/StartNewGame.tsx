@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Button, View, Text } from 'src/library/ui/components';
 import { RoomContext } from '../RoomContexts';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 import Game from 'src/model/Game/Game';
 import styles from '../Command/CommandStyles';
 
@@ -20,7 +20,7 @@ let StartNewGameX: React.FC = () => {
   }, [roomApi]);
   const playerCount = roomApi ? roomApi.getSeatedCount() : 0;
 
-  const colors = useColors();
+  const { colors } = bits;
   return roomApi ? (
     <>
       <View style={styles.instructions}>

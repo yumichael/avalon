@@ -7,7 +7,7 @@ import RoomMessageX, { RoomMessageSeparatorX } from './RoomMessage';
 import { ListRenderItem, ViewStyle } from 'react-native';
 import Room from 'src/model/Room/Room';
 import { useEventCallback } from 'src/library/helpers/reactHelp';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 const renderMessage: ListRenderItem<{ id: Room.Message.Id; message: Room.Message }> = ({
   item: { message },
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
 });
 function useInactiveInputStyle() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo<ViewStyle>(
     () => ({
       height: 24,
@@ -80,7 +80,7 @@ function useInactiveInputStyle() {
   );
 }
 function useActiveInputStyle() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo<ViewStyle>(
     () => ({
       height: 24,

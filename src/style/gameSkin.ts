@@ -1,5 +1,4 @@
 import Game from '../model/Game/Game';
-import { createContext } from 'react';
 
 export type GameSkin = {
   displayName: string;
@@ -10,12 +9,14 @@ export type GameSkin = {
 import TheResistance from './gameSkins/TheResistance.json';
 import Avalon from './gameSkins/Avalon.json';
 import My from './gameSkins/My.json';
+import { observable } from 'mobx';
 const gameSkinsTypingHelper = <T>(x: { [name in keyof T]: GameSkin }) => x;
 export const gameSkins = gameSkinsTypingHelper({ TheResistance, Avalon, My });
 
-export type GameSkinContextValue = {
-  readonly gameSkin: GameSkin;
-};
-export const GameSkinContext = createContext<GameSkinContextValue>({
-  gameSkin: gameSkins.My,
-});
+class SkinStore {
+  @observable private gameSkin: GameSkin = gameSkins.My;
+  getGameSkin() {
+    return this.gameSkin;
+  }
+}
+export const skinStore = new SkinStore();

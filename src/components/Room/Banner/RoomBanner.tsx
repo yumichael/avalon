@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { PlayingContext, RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Card, StyleSheet, TouchableRipple, View, Text } from 'src/library/ui/components';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { TextStyle } from 'react-native';
 
 let RoomBannerX: React.FC = () => {
@@ -11,7 +11,7 @@ let RoomBannerX: React.FC = () => {
   const { gameXInsert, playing } = useContext(PlayingContext);
   const gameFinish = playing && playing.getFinish();
 
-  const colors = useColors();
+  const { colors } = bits;
   const bannerStyle = useMemo(
     () => ({
       ...styles.container,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   space: { flex: 1 },
 });
 function useTitleTextStyle() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo<TextStyle>(
     () => ({
       // TODO fuck this.

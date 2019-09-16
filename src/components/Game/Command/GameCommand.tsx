@@ -7,7 +7,7 @@ import { loggedReactFC } from 'src/library/logging/loggers';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { StyleSheet, View, TouchableRipple } from 'src/library/ui/components';
 import MissionFinishedCommandX from './MissionFinishedCommand';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
 import RoundView from '../state/RoundView';
 
@@ -53,15 +53,14 @@ const styles = StyleSheet.create({
   },
 });
 function useMoveOnStyle() {
-  const colors = useColors();
   return useMemo<ViewStyle>(
     () => ({
       ...styles.default,
       borderWidth: 1,
       padding: 0,
-      borderColor: colors.concern.active,
+      borderColor: bits.colors.concern.active,
     }),
-    [colors],
+    [bits.colors],
   );
 }
 

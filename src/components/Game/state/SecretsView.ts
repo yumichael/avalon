@@ -1,7 +1,7 @@
 import { loggedConstructor } from 'src/library/logging/loggers';
 import autobind from 'autobind-decorator';
 import { observable, action } from 'mobx';
-import { timeDurations } from 'src/components/bits';
+import bits from 'src/components/bits';
 import GameApi from 'src/model/Game/GameApi';
 
 @loggedConstructor()
@@ -25,7 +25,7 @@ class SecretsView {
     this.timeout = setTimeout(() => {
       this.viewingRoleInfo = false;
       this.timeout = undefined;
-    }, timeDurations.viewSecret);
+    }, bits.timeDurations.viewSecret);
   }
   @action stopViewingRoleInfo() {
     this.viewingRoleInfo = false;

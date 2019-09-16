@@ -5,7 +5,7 @@ import { Text, StyleSheet, View } from 'src/library/ui/components';
 import Room from 'src/model/Room/Room';
 import UserAvatarX from '../User/UserAvatar';
 import { UserContext } from 'src/components/UserContexts';
-import { useColors, useAlphas } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
 
 const RoomMessageSeparatorX: React.FC = () => {
@@ -48,8 +48,7 @@ const styles = StyleSheet.create({
   },
 });
 function useSeparatorStyle() {
-  const colors = useColors();
-  const alphas = useAlphas();
+  const { colors, alphas } = bits;
   return useMemo<ViewStyle>(
     () => ({
       height: 0,

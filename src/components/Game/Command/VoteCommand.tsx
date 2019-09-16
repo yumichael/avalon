@@ -4,7 +4,7 @@ import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { View, Text, Button } from 'src/library/ui/components';
 import styles from '../../Room/Command/CommandStyles';
-import { useColors, useFancyText } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let VoteCommandX: React.FC = () => {
   const { act, info } = useContext(GameContext).gameApi;
@@ -13,8 +13,7 @@ let VoteCommandX: React.FC = () => {
   const voteReject = useCallback(() => act!.submitVote(i, j, 'reject'), [act, i, j]);
   const attr = act && info.getMissionRoundPlayerAttributes(i, j, act.playerIndex);
 
-  const colors = useColors();
-  const fancyText = useFancyText();
+  const { colors, fancyText } = bits;
   return act ? (
     <>
       <View style={styles.instructions}>

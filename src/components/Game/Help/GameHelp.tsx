@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { ScrollView, StyleSheet, Text, Button } from 'src/library/ui/components';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 import SecretsView from '../state/SecretsView';
 import { GameContext } from '../GameContexts';
 
 let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
   const { gameApi } = useContext(GameContext);
-  const colors = useColors();
+  const { colors } = bits;
   return (
     <>
       <ScrollView style={styles.dialog}>

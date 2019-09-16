@@ -4,14 +4,14 @@ import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Text, View } from 'src/library/ui/components';
 import styles from '../../Room/Command/CommandStyles';
-import { useFancyText } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let MissionFinishedCommandX: React.FC = () => {
   const { info } = useContext(GameContext).gameApi;
   const [i, j] = useContext(RoundContext).missionAndRoundIndices;
   const result = info.getMissionResultFromRound(i, j);
 
-  const fancyText = useFancyText();
+  const { fancyText } = bits;
   return (
     <View style={styles.spectating}>
       <Text style={styles.text}>

@@ -6,7 +6,7 @@ import UserInRoomX, { UserView } from '../User/UserInRoom';
 import SitOrStandX from './SitOrStand';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { View, StyleSheet, TouchableRipple } from 'src/library/ui/components';
-import { useColors, useAlphas, timeDurations } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
 import AssignDirectorX from './AssignDirector';
 
@@ -28,7 +28,7 @@ let SeatX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) => {
   );
   useEffect(() => {
     if (userView !== 'avatar') {
-      const timeout = setTimeout(() => setUserView('avatar'), timeDurations.viewBids);
+      const timeout = setTimeout(() => setUserView('avatar'), bits.timeDurations.viewBids);
       return () => {
         clearTimeout(timeout);
       };
@@ -85,8 +85,7 @@ const styles = StyleSheet.create({
   touchView: { flex: 1 },
 });
 function useEmptyStyle() {
-  const colors = useColors();
-  const alphas = useAlphas();
+  const { colors, alphas } = bits;
   return useMemo<ViewStyle>(
     () => ({
       height: 64 + 8,

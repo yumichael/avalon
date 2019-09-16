@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { PlayingContext, RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Card, View, Text, Button, TouchableRipple } from 'src/library/ui/components';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
 import styles from './CommandStyles';
 
@@ -69,7 +69,7 @@ let RoomCommandX: React.FC<{
 RoomCommandX = observerWithMeta(loggedReactFC()(RoomCommandX));
 
 function useNotPlayingContainerStyle() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo<ViewStyle>(
     () => ({
       borderWidth: 1,
@@ -79,7 +79,7 @@ function useNotPlayingContainerStyle() {
   );
 }
 function useViewingGameContainerStyle() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo<ViewStyle>(
     () => ({
       borderWidth: 1,

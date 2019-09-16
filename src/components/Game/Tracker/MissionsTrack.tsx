@@ -6,7 +6,7 @@ import Game from 'src/model/Game/Game';
 import MissionStampX, { useStampPropsMap } from './MissionStamp';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View } from 'src/library/ui/components';
-import { useAlphas } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let MissionsTrackX: React.FC<{ roundView: RoundView }> = ({ roundView }) => {
   const { info } = useContext(GameContext).gameApi;
@@ -24,7 +24,7 @@ let MissionsTrackX: React.FC<{ roundView: RoundView }> = ({ roundView }) => {
         : 'current'
       : 'future'
   ];
-  const alphas = useAlphas();
+  const { alphas } = bits;
   const trackStyle = useMemo(
     () => ({ ...styles.default, borderBottomColor: stampProps.color + alphas.helping.default }),
     [stampProps],

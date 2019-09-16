@@ -1,6 +1,6 @@
-import React, { useContext, useMemo } from 'react';
+import React from 'react';
 import { Text } from 'src/library/ui/components';
-import { GameSkinContext } from 'src/style/gameSkin';
+import { skinStore } from 'src/style/gameSkin';
 
 const roomActiveColor = '#FF8585';
 
@@ -19,9 +19,6 @@ const colors = {
   // room: { active: '#FB9930', passive: '#8A6F1C' },
   room: { active: roomActiveColor, passive: '#007AFF' },
 };
-function useColors() {
-  return colors;
-}
 
 const alphas = {
   vote: { default: 'C0' },
@@ -30,9 +27,6 @@ const alphas = {
   helping: { default: '29' },
   role: { default: 'A0' },
 };
-function useAlphas() {
-  return alphas;
-}
 
 const icons = {
   leader: { default: 'star' },
@@ -47,14 +41,11 @@ const icons = {
   info: { default: 'info' },
   assignDirector: { default: 'create' },
 };
-function useIcons() {
-  return icons;
-}
 
 const fancyTextStyle = {
   fontWeight: 'bold' as 'bold',
 };
-const fancyText = {
+const fancyTextBase = {
   leader: <Text style={{ ...fancyTextStyle, color: colors.leader.active }}>leader</Text>,
   team: <Text style={{ ...fancyTextStyle, color: colors.team.default }}>team</Text>,
   voted: <Text style={{ ...fancyTextStyle, color: colors.leader.passive }}>voted</Text>,
@@ -80,30 +71,23 @@ const fancyText = {
   fail: <Text style={{ ...fancyTextStyle, color: colors.evil.default }}>fail</Text>,
   CHOOSE: <Text style={{ fontWeight: '500', color: colors.leader.active }}>CHOOSE</Text>,
 };
-function useFancyText() {
-  const { gameSkin } = useContext(GameSkinContext);
-  return useMemo(
-    () => ({
-      ...fancyText,
-      good: (
-        <Text style={{ ...fancyTextStyle, color: colors.good.default }}>
-          {gameSkin.factionNames.good}
-        </Text>
-      ),
-      evil: (
-        <Text style={{ ...fancyTextStyle, color: colors.evil.default }}>
-          {gameSkin.factionNames.evil}
-        </Text>
-      ),
-    }),
-    [gameSkin],
-  );
-}
-
-function useRoleNames() {
-  const { gameSkin } = useContext(GameSkinContext);
-  return gameSkin.roleNames;
-}
+const fancyText = {
+  ...fancyTextBase,
+  get good() {
+    return (
+      <Text style={{ ...fancyTextStyle, color: colors.good.default }}>
+        {skinStore.getGameSkin().factionNames.good}
+      </Text>
+    );
+  },
+  get evil() {
+    return (
+      <Text style={{ ...fancyTextStyle, color: colors.evil.default }}>
+        {skinStore.getGameSkin().factionNames.evil}
+      </Text>
+    );
+  },
+};
 
 const timeDurations = {
   viewSecret: 1000,
@@ -111,4 +95,5 @@ const timeDurations = {
   viewBids: 2000,
 };
 
-export { useColors, useAlphas, useIcons, useFancyText, useRoleNames, timeDurations };
+const bits = { colors, alphas, icons, fancyText, timeDurations };
+export default bits;

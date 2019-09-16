@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext, PlayerContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { View, StyleSheet, IconButton } from 'src/library/ui/components';
-import { useColors, useAlphas } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
 
 let TeamDecoratorX: React.FC = () => {
@@ -14,7 +14,7 @@ let TeamDecoratorX: React.FC = () => {
   const inTeam = attr && attr.inTeam;
   const toggle = useCallback(() => act!.toggleTeamMember(i, j, k), [act, i, j, k]);
 
-  const colors = useColors();
+  const { colors } = bits;
   const inTeamStyle = useInTeamStyle();
   return (
     <>
@@ -40,8 +40,7 @@ const styles = StyleSheet.create({
   },
 });
 function useInTeamStyle() {
-  const colors = useColors();
-  const alphas = useAlphas();
+  const { colors, alphas } = bits;
   return useMemo<ViewStyle>(
     () => ({
       alignSelf: 'center',

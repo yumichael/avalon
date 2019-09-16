@@ -3,7 +3,7 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext, PlayerContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View } from 'src/library/ui/components';
-import { useColors, useAlphas } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let VoteDecoratorX: React.FC = () => {
   const { info } = useContext(GameContext).gameApi;
@@ -37,8 +37,7 @@ const styles = StyleSheet.create({
 });
 
 function useColorMap() {
-  const colors = useColors();
-  const alphas = useAlphas();
+  const { colors, alphas } = bits;
   return useMemo(
     () => ({
       voted: colors.leader.passive + alphas.vote.default,

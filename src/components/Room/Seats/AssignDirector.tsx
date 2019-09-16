@@ -4,7 +4,7 @@ import Room from 'src/model/Room/Room';
 import { RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { IconButton, StyleSheet } from 'src/library/ui/components';
-import { useColors, useIcons } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let AssignDirectorX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) => {
   const { roomApiInit, state } = useContext(RoomContext);
@@ -24,13 +24,11 @@ let AssignDirectorX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) 
       ? callback
       : null;
 
-  const icons = useIcons();
-  const colors = useColors();
   return assign ? (
     <IconButton
-      icon={icons.assignDirector.default}
+      icon={bits.icons.assignDirector.default}
       onPress={assign}
-      color={colors.room.active}
+      color={bits.colors.room.active}
       style={styles.default}
     />
   ) : null;

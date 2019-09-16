@@ -4,15 +4,7 @@ import Room from 'src/model/Room/Room';
 import { RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { IconButton, StyleSheet } from 'src/library/ui/components';
-import { useColors, useIcons } from 'src/components/bits';
-
-function useIconPropsMap() {
-  const icons = useIcons();
-  return {
-    sit: { icon: icons.sit.default },
-    stand: { icon: icons.stand.default },
-  };
-}
+import bits from 'src/components/bits';
 
 let SitOrStandX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) => {
   const { roomApiInit } = useContext(RoomContext);
@@ -26,12 +18,14 @@ let SitOrStandX: React.FC<{ seatIndex: Room.Seat.Index }> = ({ seatIndex }) => {
       ? 'stand'
       : null;
 
-  const colors = useColors();
-  const iconPropsMap = useIconPropsMap();
+  const iconPropsMap = {
+    sit: { icon: bits.icons.sit.default },
+    stand: { icon: bits.icons.stand.default },
+  };
   return iconPropsKey ? (
     <IconButton
       icon={iconPropsMap[iconPropsKey].icon}
-      color={colors.room.active}
+      color={bits.colors.room.active}
       onPress={{ sit, stand }[iconPropsKey]}
       style={styles.default}
     />

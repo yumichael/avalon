@@ -2,13 +2,13 @@ import React from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, ToggleButton } from 'src/library/ui/components';
-import { useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let NewGameButtonX: React.FC<{
   callback: () => void;
   beenActivated: boolean;
 }> = ({ callback, beenActivated }) => {
-  const colors = useColors();
+  const { colors } = bits;
   return (
     <ToggleButton
       onPress={callback}

@@ -5,7 +5,7 @@ import RoundView from '../state/RoundView';
 import Game from 'src/model/Game/Game';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View, ToggleButton, Badge, Text, IconButton } from 'src/library/ui/components';
-import { useColors, useIcons, useAlphas } from 'src/components/bits';
+import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
 import range from 'lodash/range';
 
@@ -38,7 +38,7 @@ let MissionStampX: React.FC<{
     vote,
     result,
   );
-  const alphas = useAlphas();
+  const { alphas } = bits;
   // const viewingStyle = useViewingStyle();
   return (
     <View style={styles.default}>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
 //   );
 // }
 function usePeopleStyle() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo<ViewStyle>(
     () => ({
       alignSelf: 'center',
@@ -118,8 +118,7 @@ function usePeopleStyle() {
 }
 
 export function useStampPropsMap() {
-  const colors = useColors();
-  const icons = useIcons();
+  const { colors, icons } = bits;
   return useMemo(
     () => ({
       success: { icon: icons.success.default, color: colors.good.default },
@@ -131,7 +130,7 @@ export function useStampPropsMap() {
   );
 }
 function useBidStyles() {
-  const colors = useColors();
+  const { colors } = bits;
   return useMemo(
     () => ({
       success: { color: colors.good.default },

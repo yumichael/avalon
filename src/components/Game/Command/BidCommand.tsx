@@ -4,9 +4,11 @@ import { GameContext, RoundContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Button, Text, View } from 'src/library/ui/components';
 import styles from '../../Room/Command/CommandStyles';
-import { useColors, useFancyText, useIcons, timeDurations } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let BidCommandX: React.FC = () => {
+  const { colors, icons, fancyText, timeDurations } = bits;
+
   const { act, info } = useContext(GameContext).gameApi;
   const [i, j] = useContext(RoundContext).missionAndRoundIndices;
   const bidSuccess = useCallback(() => act!.submitBid(i, j, 'success'), [act, i, j]);
@@ -28,9 +30,6 @@ let BidCommandX: React.FC = () => {
     return undefined;
   }, [bidsReveal, setBidsReveal]);
 
-  const colors = useColors();
-  const fancyText = useFancyText();
-  const icons = useIcons();
   const rejected = info.getMissionRoundVoteOutcome(i, j) === 'reject' && (
     <Text style={styles.text}>
       The {fancyText.team} proposal was rejected by {fancyText.vote}.

@@ -5,7 +5,7 @@ import RoundView from '../state/RoundView';
 import Game from 'src/model/Game/Game';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View, ToggleButton } from 'src/library/ui/components';
-import { useColors, useAlphas } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let RoundStampX: React.FC<{
   roundView: RoundView;
@@ -33,8 +33,7 @@ let RoundStampX: React.FC<{
   //   ),
   //   [i],
   // );
-  const colors = useColors();
-  const alphas = useAlphas();
+  const { colors, alphas } = bits;
   // const viewingStyle = useViewingStyle();
   return (
     <View style={styles.default}>

@@ -3,15 +3,14 @@ import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { GameContext, RoundContext, PlayerContext } from '../GameContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View, IconButton } from 'src/library/ui/components';
-import { useIcons, useColors } from 'src/components/bits';
+import bits from 'src/components/bits';
 
 let LeaderDecoratorX: React.FC = () => {
   const { info } = useContext(GameContext).gameApi;
   const [i, j] = useContext(RoundContext).missionAndRoundIndices;
   const { playerIndex: k } = useContext(PlayerContext);
 
-  const colors = useColors();
-  const icons = useIcons();
+  const { colors, icons } = bits;
   return (
     <View style={styles.default}>
       {k === info.getMissionRoundLeader(i, j) ? (
