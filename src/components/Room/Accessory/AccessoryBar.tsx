@@ -21,9 +21,6 @@ let AccessoryBarX: React.FC = () => {
       />,
     );
   }
-  if (playing && finish && gameXInsert) {
-    buttons.push(gameXInsert.getViewSecretsButton());
-  }
   if (gameXInsert) {
     buttons.push(
       gameXInsert.getGameHelpButton({
@@ -31,6 +28,9 @@ let AccessoryBarX: React.FC = () => {
         beenActivated: state.isViewingGameHelp(),
       }),
     );
+  }
+  if (playing && finish && gameXInsert) {
+    buttons.push(gameXInsert.getViewSecretsButton());
   }
   for (const [i, e] of buttons.entries()) {
     buttons[i] = (

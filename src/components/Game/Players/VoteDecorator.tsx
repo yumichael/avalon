@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
   default: {
     alignSelf: 'center',
     position: 'absolute',
-    height: 76,
-    width: 76,
-    borderWidth: 3,
-    borderRadius: 48,
+    height: (bits.constSizes.screenHeight / 812) * 76,
+    width: (bits.constSizes.screenHeight / 812) * 76,
+    borderWidth: (bits.constSizes.screenHeight / 812) * 3,
+    borderRadius: (bits.constSizes.screenHeight / 812) * 48,
   },
 });
 
@@ -44,7 +44,7 @@ function useColorMap() {
       approve: colors.approve.default + alphas.vote.default,
       reject: colors.reject.default + alphas.vote.default,
     }),
-    [colors, alphas],
+    [colors.leader.passive, colors.approve.default, colors.reject.default, alphas.vote.default],
   );
 }
 

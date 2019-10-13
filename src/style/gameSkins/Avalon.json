@@ -8,7 +8,9 @@
     "blindSpy": "Oberon",
     "follower": "Galehaut",
     "good": "Loyal Servant of Arthur",
-    "evil": "Minion of Mordred"
+    "goods": "Loyal Servants of Arthur",
+    "evil": "Minion of Mordred",
+    "evils": "Minions of Mordred"
   },
   "factionNames": {
     "good": "good",

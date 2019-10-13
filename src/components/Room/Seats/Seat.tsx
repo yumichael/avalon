@@ -68,32 +68,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tight: {
-    height: 64,
-    width: 64,
-    margin: 9,
+    height: (bits.constSizes.screenHeight / 812) * 64,
+    width: (bits.constSizes.screenHeight / 812) * 64,
+    margin: (bits.constSizes.screenHeight / 812) * 9,
     alignItems: 'center',
     justifyContent: 'center',
   },
   touch: {
     alignSelf: 'center',
     position: 'absolute',
-    height: 32,
-    width: 32,
-    borderRadius: 16,
+    height: (bits.constSizes.screenHeight / 812) * 32,
+    width: (bits.constSizes.screenHeight / 812) * 32,
+    borderRadius: (bits.constSizes.screenHeight / 812) * 16,
     // backgroundColor: '#f00', // testing
   },
   touchView: { flex: 1 },
 });
 function useEmptyStyle() {
-  const { colors, alphas } = bits;
+  const { colors, alphas, constSizes } = bits;
   return useMemo<ViewStyle>(
     () => ({
-      height: 64 + 8,
-      width: 64 + 8,
-      borderRadius: 64,
+      height: (constSizes.screenHeight / 812) * (64 + 8),
+      width: (constSizes.screenHeight / 812) * (64 + 8),
+      borderRadius: (constSizes.screenHeight / 812) * 64,
       backgroundColor: colors.concern.passive + alphas.helping.default,
     }),
-    [colors, alphas],
+    [colors.concern.passive, alphas.helping.default],
   );
 }
 

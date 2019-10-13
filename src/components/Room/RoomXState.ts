@@ -31,6 +31,7 @@ class RoomXState {
   viewNewGameMenu() {
     this.viewingNewGameMenu = true;
     this.assigningDirector = false;
+    this.viewingGame = false;
   }
   @action
   viewGameHelp() {

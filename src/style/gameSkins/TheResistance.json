@@ -7,8 +7,10 @@
     "deepCover": "Deep Cover",
     "blindSpy": "Blind Spy",
     "follower": "Follower",
-    "good": "Resistance",
-    "evil": "Spy"
+    "good": "resistance",
+    "goods": "resistance",
+    "evil": "spy",
+    "evils": "spies"
   },
   "factionNames": {
     "good": "resistance",

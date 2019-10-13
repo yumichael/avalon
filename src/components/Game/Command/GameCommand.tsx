@@ -60,7 +60,7 @@ function useMoveOnStyle() {
       padding: 0,
       borderColor: bits.colors.concern.active,
     }),
-    [bits.colors],
+    [bits.colors.concern.active],
   );
 }
 

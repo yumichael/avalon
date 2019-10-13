@@ -4,7 +4,6 @@ import { PlayingContext, RoomContext } from '../RoomContexts';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { Card, StyleSheet, TouchableRipple, View, Text } from 'src/library/ui/components';
 import bits from 'src/components/bits';
-import { TextStyle } from 'react-native';
 
 let RoomBannerX: React.FC = () => {
   const { state } = useContext(RoomContext);
@@ -31,7 +30,6 @@ let RoomBannerX: React.FC = () => {
     [playing, gameFinish, state.isViewingGame()],
   );
   const overlayStyle = useMemo(() => ({ ...styles.container, ...styles.touchOverlay }), []);
-  const titleTextStyle = useTitleTextStyle();
   return (
     <>
       <Card style={bannerStyle}>
@@ -40,7 +38,7 @@ let RoomBannerX: React.FC = () => {
         ) : (
           <>
             <View style={styles.space} />
-            <Text style={titleTextStyle}>The Resistance</Text>
+            <Text style={styles.title}>{bits.fancyText.theGame}</Text>
             <View style={styles.space} />
           </>
         )}
@@ -74,21 +72,7 @@ const styles = StyleSheet.create({
     // borderColor: colors.room.passive,
   },
   space: { flex: 1 },
+  title: { fontSize: 36, textAlign: 'center', textAlignVertical: 'center' },
 });
-function useTitleTextStyle() {
-  const { colors } = bits;
-  return useMemo<TextStyle>(
-    () => ({
-      // TODO fuck this.
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      color: colors.game.default,
-      textAlign: 'center',
-      textAlignVertical: 'center',
-    }),
-    [colors],
-  );
-}
 
 export default RoomBannerX;

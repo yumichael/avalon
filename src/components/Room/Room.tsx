@@ -17,6 +17,7 @@ import SeatX from './Seats/Seat';
 import NewGameMenuXInsert from './NewGame/NewGameMenuXInsert';
 import RoomXState from './RoomXState';
 import AccessoryBarX from './Accessory/AccessoryBar';
+import { Platform } from 'react-native';
 
 type RoomXProps = {
   roomRef: Room.Ref;
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
   attention: {
     flex: 1,
     margin: 30,
-    marginBottom: 40,
+    marginBottom: 30 + (Platform.OS === 'ios' ? 10 : 0),
     justifyContent: 'space-between',
     alignItems: 'stretch',
   },
@@ -194,6 +195,7 @@ const styles = StyleSheet.create({
   middle: { flex: 1, alignItems: 'stretch', justifyContent: 'space-between', zIndex: 1 },
   dialog: {
     flex: 2,
+    margin: 1,
   },
   right: { justifyContent: 'space-between' },
   banner: {

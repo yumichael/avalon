@@ -1,8 +1,10 @@
 import React from 'react';
 import { Text } from 'src/library/ui/components';
 import { skinStore } from 'src/style/gameSkin';
+import { Dimensions } from 'react-native';
 
 const roomActiveColor = '#FF8585';
+const roomPassiveColor = '#007AFF';
 
 const colors = {
   good: { default: '#0000FF' },
@@ -17,12 +19,13 @@ const colors = {
   // concern: { active: '#E9E900', passive: '#777777' },
   concern: { active: '#E9E900', passive: /*'#82705A'*/ '#3C9077' },
   // room: { active: '#FB9930', passive: '#8A6F1C' },
-  room: { active: roomActiveColor, passive: '#007AFF' },
+  room: { active: roomActiveColor, passive: roomPassiveColor },
+  presence: { active: '#96A2E0', passive: '#808080' },
 };
 
 const alphas = {
   vote: { default: 'C0' },
-  future: { default: 'C0' },
+  future: { default: '52' },
   highlight: { default: '0B' },
   helping: { default: '29' },
   role: { default: 'A0' },
@@ -66,10 +69,16 @@ const fancyTextBase = {
     </>
   ),
   mission: <Text style={{ ...fancyTextStyle, color: colors.concern.active }}>mission</Text>,
+  missions: <Text style={{ ...fancyTextStyle, color: colors.concern.active }}>missions</Text>,
   round: <Text style={{ ...fancyTextStyle, color: colors.concern.active }}>round</Text>,
   success: <Text style={{ ...fancyTextStyle, color: colors.good.default }}>success</Text>,
   fail: <Text style={{ ...fancyTextStyle, color: colors.evil.default }}>fail</Text>,
   CHOOSE: <Text style={{ fontWeight: '500', color: colors.leader.active }}>CHOOSE</Text>,
+  theGame: (
+    <Text style={{ ...fancyTextStyle, fontStyle: 'italic', color: colors.game.default }}>
+      The Resistance
+    </Text>
+  ),
 };
 const fancyText = {
   ...fancyTextBase,
@@ -87,6 +96,20 @@ const fancyText = {
       </Text>
     );
   },
+  get goodPlayers() {
+    return (
+      <Text style={{ ...fancyTextStyle, color: colors.good.default }}>
+        {skinStore.getGameSkin().roleNames.goods}
+      </Text>
+    );
+  },
+  get evilPlayers() {
+    return (
+      <Text style={{ ...fancyTextStyle, color: colors.evil.default }}>
+        {skinStore.getGameSkin().roleNames.evils}
+      </Text>
+    );
+  },
 };
 
 const timeDurations = {
@@ -95,5 +118,14 @@ const timeDurations = {
   viewBids: 2000,
 };
 
-const bits = { colors, alphas, icons, fancyText, timeDurations };
+const { height, width } = Dimensions.get('window');
+const constSizes = {
+  screenHeight: height,
+  screenWidth: width,
+  presenceCurve: 3,
+  presenceBorderWidth: 3,
+  inputHeight: 24,
+};
+
+const bits = { colors, alphas, icons, fancyText, timeDurations, constSizes };
 export default bits;

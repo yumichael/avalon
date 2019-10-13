@@ -55,7 +55,7 @@ function useSeparatorStyle() {
       borderTopWidth: 1,
       borderTopColor: colors.room.passive + alphas.helping.default,
     }),
-    [colors, alphas],
+    [colors.room.passive, alphas.helping.default],
   );
 }
 

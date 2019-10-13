@@ -7,8 +7,10 @@
     "deepCover": "Betrayer",
     "blindSpy": "Lone Wolf",
     "follower": "Apprentice",
-    "good": "Resistance",
-    "evil": "Spy"
+    "good": "resistance",
+    "goods": "resistance",
+    "evil": "spy",
+    "evils": "spies"
   },
   "factionNames": {
     "good": "resistance",

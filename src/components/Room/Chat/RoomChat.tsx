@@ -61,7 +61,7 @@ RoomChatX = observerWithMeta(loggedReactFC()(RoomChatX));
 const styles = StyleSheet.create({
   default: {
     flex: 1,
-    margin: 3,
+    marginHorizontal: (bits.constSizes.screenHeight / 812) * 10,
     alignItems: 'stretch',
   },
   messages: {
@@ -69,25 +69,25 @@ const styles = StyleSheet.create({
   },
 });
 function useInactiveInputStyle() {
-  const { colors } = bits;
+  const { colors, constSizes } = bits;
   return useMemo<ViewStyle>(
     () => ({
-      height: 24,
+      height: constSizes.inputHeight,
       borderWidth: 1,
       borderColor: colors.room.passive,
     }),
-    [colors],
+    [colors.room.passive],
   );
 }
 function useActiveInputStyle() {
-  const { colors } = bits;
+  const { colors, constSizes } = bits;
   return useMemo<ViewStyle>(
     () => ({
-      height: 24,
+      height: constSizes.inputHeight,
       borderWidth: 1,
       borderColor: colors.room.active,
     }),
-    [colors],
+    [colors.room.active],
   );
 }
 

@@ -5,6 +5,7 @@ import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View } from 'src/library/ui/components';
 import UserAvatarX from './UserAvatar';
 import UserNamePreviewX from './UserNamePreview';
+import bits from 'src/components/bits';
 
 export type UserView = 'avatar' | 'name';
 
@@ -16,7 +17,7 @@ let UserInRoomX: React.FC<{ userRef: User.Ref; userView: UserView }> = ({ userRe
       ) : (
         // TODO sorry the touch to see name part is in `SeatX` for ease of coding.
         // <TouchableRipple onPress={viewName} style={styles.touch}>
-        <UserAvatarX userRef={userRef} />
+        <UserAvatarX userRef={userRef} size={(bits.constSizes.screenHeight / 812) * 64} />
         // </TouchableRipple>
       )}
     </View>

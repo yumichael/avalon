@@ -49,13 +49,18 @@ let MissionStampX: React.FC<{
           style={styles.expander}
         />
       ) : null}
-      <Badge size={11} style={peopleStyle} children={bidsDisplay} />
+      <Badge
+        size={(bits.constSizes.screenHeight / 812) * 11}
+        style={peopleStyle}
+        children={bidsDisplay}
+      />
       {/*i === iViewing ? <View style={viewingStyle} /> : null*/
       /* TODO get rid of commented out code in this file */}
       <ToggleButton
         icon={stampProps.icon}
         color={stampProps.color}
         onPress={viewMission}
+        size={(bits.constSizes.screenHeight / 812) * 27}
         status={i === iViewing ? 'checked' : 'unchecked'}
         disabled={i > iLatest}
         style={styles.selection}
@@ -78,8 +83,8 @@ const styles = StyleSheet.create({
     // top: 0,
   },
   selection: {
-    width: 38,
-    height: 38,
+    width: (bits.constSizes.screenHeight / 812) * 38,
+    height: (bits.constSizes.screenHeight / 812) * 38,
     // position: 'absolute',
     // bottom: 0,
   },
@@ -113,7 +118,7 @@ function usePeopleStyle() {
       alignSelf: 'center',
       backgroundColor: colors.leader.passive,
     }),
-    [colors],
+    [colors.leader.passive],
   );
 }
 
@@ -126,7 +131,16 @@ export function useStampPropsMap() {
       current: { icon: icons.currentMission.default, color: colors.concern.active },
       future: { icon: icons.futureMission.default, color: colors.concern.passive },
     }),
-    [colors, icons],
+    [
+      colors.good.default,
+      colors.evil.default,
+      colors.concern.active,
+      colors.concern.passive,
+      icons.success.default,
+      icons.fail.default,
+      icons.currentMission.default,
+      icons.futureMission.default,
+    ],
   );
 }
 function useBidStyles() {
@@ -139,7 +153,7 @@ function useBidStyles() {
       ignored: { color: colors.concern.passive },
       future: {},
     }),
-    [colors],
+    [colors.good.default, colors.evil.default, colors.concern.active, colors.concern.passive],
   );
 }
 const wantBid = '⬤';

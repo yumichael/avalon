@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
   default: {
     alignSelf: 'center',
     position: 'absolute',
-    height: 64,
-    width: 64,
-    borderRadius: 32,
+    height: (bits.constSizes.screenHeight / 812) * 64,
+    width: (bits.constSizes.screenHeight / 812) * 64,
+    borderRadius: (bits.constSizes.screenHeight / 812) * 32,
   },
 });
 
@@ -50,7 +50,7 @@ function useColorMap() {
       evil: colors.evil.default + alphas.role.default,
       either: colors.concern.active + alphas.role.default,
     }),
-    [colors, alphas],
+    [colors.good.default, colors.evil.default, colors.concern.active, alphas.role.default],
   );
 }
 

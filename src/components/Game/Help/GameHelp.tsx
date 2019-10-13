@@ -1,27 +1,47 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback, useMemo } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
-import { ScrollView, StyleSheet, Text, Button } from 'src/library/ui/components';
+import { ScrollView, StyleSheet, Text, Button, View } from 'src/library/ui/components';
 import bits from 'src/components/bits';
 import SecretsView from '../state/SecretsView';
 import { GameContext } from '../GameContexts';
+import { Linking } from 'react-native';
 
 let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
   const { gameApi } = useContext(GameContext);
-  const { colors } = bits;
+  const { colors, fancyText } = bits;
+  const openRules = useCallback(
+    () => Linking.openURL('https://en.wikipedia.org/wiki/The_Resistance_(game)'),
+    [Linking],
+  );
+  const containerStyle = useContainerStyle();
   return (
-    <>
+    <View style={containerStyle}>
       <ScrollView style={styles.dialog}>
         <Text>
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece
-          of classical Latin literature from 45 BC, making it over 2000 years old. Richard
-          McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the
-          more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the
-          cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum
-          comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes
-          of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of
-          ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum
-          dolor sit amet..", comes from a line in section 1.10.32.
+          <Text style={styles.bold}>Game Help</Text>
+          {'\n\n'}
+          {fancyText.theGame} is a social deduction game with secret identities. The{' '}
+          {fancyText.goodPlayers} must determine the hidden {fancyText.evilPlayers} among them as
+          everyone together choose {fancyText.team}s to go on {fancyText.mission}s whose outcome
+          will determine the fate of the {fancyText.goodPlayers}. The {fancyText.evilPlayers} must
+          hide their identities and gain everyone's trust so they can be chosen to be placed on the{' '}
+          {fancyText.team}s for these {fancyText.mission}s and gain the chance to sabotage them.
+          {'\n\n'}
+          The {fancyText.goodPlayers} wins the game if three {fancyText.mission}s are completed
+          successfully.
+          {'\n\n'}
+          The {fancyText.evilPlayers} win if three {fancyText.mission}s fail.
+          {'\n\n'}A fundamental rule of the game is that players may say anything that they want, at
+          anytime during the game. You are allowed to say anything, to any one, at any time as long
+          as it is said publicly. Discussion, deception, intuition, social interaction and logical
+          deductions are all equally important to winning. The only thing you must not do is show
+          your phone screen to anyone else.
+          {'\n\n'}
+          <Text style={styles.hyperlink} onPress={openRules}>
+            Link to Detailed Rules
+          </Text>
+          {'\n'}
         </Text>
       </ScrollView>
       {gameApi.info.getGameFinish() ? null : !!!secretsView.isViewingRoleInfo() ? (
@@ -47,7 +67,7 @@ let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
           close view
         </Button>
       )}
-    </>
+    </View>
   );
 };
 GameHelpX = observerWithMeta(loggedReactFC()(GameHelpX));
@@ -57,6 +77,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {},
+  hyperlink: { color: 'blue' },
+  bold: { fontWeight: 'bold' },
 });
+function useContainerStyle() {
+  const { constSizes, colors, alphas } = bits;
+  return useMemo(
+    () => ({
+      flex: 1,
+      borderWidth: constSizes.presenceBorderWidth,
+      borderRadius: constSizes.presenceCurve,
+      borderColor: colors.room.passive,
+      backgroundColor: colors.presence.active + alphas.helping.default,
+    }),
+    [
+      constSizes.presenceBorderWidth,
+      constSizes.presenceCurve,
+      colors.room.passive,
+      colors.presence.active,
+      alphas.helping.default,
+    ],
+  );
+}
 
 export default GameHelpX;

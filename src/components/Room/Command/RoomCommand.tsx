@@ -17,16 +17,27 @@ let RoomCommandX: React.FC<{
 
   const viewingGameContainerStyle = useViewingGameContainerStyle();
   const notPlayingContainerStyle = useNotPlayingContainerStyle();
+  const newGameContainerStyle = useNewGameContainerStyle();
   const commandStyle = useMemo(
     () => ({
       ...styles.container,
       ...(gameFinish && state.isViewingGame()
         ? viewingGameContainerStyle
         : !!!playing || gameFinish
-        ? notPlayingContainerStyle
+        ? startNewGame
+          ? newGameContainerStyle
+          : notPlayingContainerStyle
         : null),
     }),
-    [state.isViewingGame(), playing, gameFinish],
+    [
+      state.isViewingGame(),
+      playing,
+      gameFinish,
+      startNewGame,
+      viewingGameContainerStyle,
+      notPlayingContainerStyle,
+      newGameContainerStyle,
+    ],
   );
   const element = (
     <Card style={commandStyle}>
@@ -75,7 +86,7 @@ function useNotPlayingContainerStyle() {
       borderWidth: 1,
       borderColor: colors.room.passive,
     }),
-    [colors],
+    [colors.room.passive],
   );
 }
 function useViewingGameContainerStyle() {
@@ -85,7 +96,19 @@ function useViewingGameContainerStyle() {
       borderWidth: 1,
       borderColor: colors.concern.active,
     }),
-    [colors],
+    [colors.concern.active],
+  );
+}
+function useNewGameContainerStyle() {
+  const { colors, alphas, constSizes } = bits;
+  return useMemo<ViewStyle>(
+    () => ({
+      borderWidth: constSizes.presenceBorderWidth,
+      borderColor: colors.concern.active,
+      borderRadius: constSizes.presenceCurve,
+      backgroundColor: colors.presence.active + alphas.helping.default,
+    }),
+    [colors.concern.active, colors.presence.active, alphas.helping.default],
   );
 }
 

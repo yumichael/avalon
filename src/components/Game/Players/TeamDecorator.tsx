@@ -35,24 +35,24 @@ TeamDecoratorX = observerWithMeta(loggedReactFC()(TeamDecoratorX));
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: -16,
-    right: -16,
+    bottom: (-bits.constSizes.screenHeight / 812) * 16,
+    right: (-bits.constSizes.screenHeight / 812) * 16,
   },
 });
 function useInTeamStyle() {
-  const { colors, alphas } = bits;
+  const { colors, alphas, constSizes } = bits;
   return useMemo<ViewStyle>(
     () => ({
       alignSelf: 'center',
       position: 'absolute',
-      height: 84,
-      width: 84,
+      height: (constSizes.screenHeight / 812) * 84,
+      width: (constSizes.screenHeight / 812) * 84,
       backgroundColor: colors.team.default + alphas.highlight.default,
       borderWidth: 1,
       borderColor: colors.team.default,
       zIndex: -1,
     }),
-    [colors, alphas],
+    [colors.team.default, alphas.highlight.default],
   );
 }
 

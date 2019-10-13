@@ -49,9 +49,10 @@ let RoundStampX: React.FC<{
               ? colors.concern.active
               : j < theRoundCountForMission - 1
               ? colors.concern.passive + alphas.future.default
-              : colors.approve.default + alphas.future.default
+              : colors.concern.passive + alphas.future.default
           }
           onPress={viewRound}
+          size={(bits.constSizes.screenHeight / 812) * 27}
           status={j === jViewing ? 'checked' : 'unchecked'}
           disabled={j > jLatest!}
           style={styles.selection}
@@ -69,8 +70,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selection: {
-    width: 38,
-    height: 38,
+    width: (bits.constSizes.screenHeight / 812) * 38,
+    height: (bits.constSizes.screenHeight / 812) * 38,
   },
 });
 // function useViewingStyle() {

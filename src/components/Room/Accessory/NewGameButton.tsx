@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, ToggleButton } from 'src/library/ui/components';
@@ -9,13 +9,14 @@ let NewGameButtonX: React.FC<{
   beenActivated: boolean;
 }> = ({ callback, beenActivated }) => {
   const { colors } = bits;
+  const activatedStyle = useActivatedStyle();
   return (
     <ToggleButton
       onPress={callback}
       icon="games"
-      color={beenActivated ? colors.room.passive : colors.concern.active}
+      color={colors.concern.active}
       status={beenActivated ? 'checked' : 'unchecked'}
-      style={styles.default}
+      style={beenActivated ? activatedStyle : styles.default}
     />
   );
 };
@@ -24,5 +25,12 @@ NewGameButtonX = observerWithMeta(loggedReactFC()(NewGameButtonX));
 const styles = StyleSheet.create({
   default: {},
 });
+function useActivatedStyle() {
+  const { colors, alphas } = bits;
+  return useMemo(() => ({ backgroundColor: colors.presence.active + alphas.helping.default }), [
+    colors.presence.active,
+    alphas.helping.default,
+  ]);
+}
 
 export default NewGameButtonX;

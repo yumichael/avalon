@@ -11,7 +11,52 @@ namespace Room {
     return dataApi.makeRefFromId(roomId);
   }
   export type Doc = Database.Document<Room.Data>;
-  export const dataApi = new Database.SingleDocumentStore<Room.Data>(collectionId);
+  export const dataApi = (() => {
+    // tslint:disable-next-line: no-shadowed-variable
+    const dataApi = new Database.SingleDocumentStore<Room.Data>(collectionId);
+    dataApi.createRefForNewDoc = (): Database.DocumentReference => {
+      const letters = 'abcdefghijkmnpqrstuvwxyz'; // IMPORTANT: missing l, o
+      const numbers = '0123456789';
+      let result = '';
+      for (const _ of lodashRange(3)) {
+        result += letters.charAt(Math.floor(Math.random() * letters.length));
+        result += numbers.charAt(Math.floor(Math.random() * numbers.length));
+        result += numbers.charAt(Math.floor(Math.random() * numbers.length));
+      }
+      result += letters.charAt(Math.floor(Math.random() * letters.length));
+      result += getLastTwoRoomIdDigits(result);
+      return dataApi.makeRefFromId(result);
+    };
+    return dataApi;
+  })();
+  function getLastTwoRoomIdDigits(roomId: Id): string | undefined {
+    let num = 0;
+    num += roomId.charCodeAt(0) * 47;
+    num += parseInt(roomId.slice(1, 3)) * 13;
+    num += roomId.charCodeAt(3) * 89;
+    num += parseInt(roomId.slice(4, 6)) * 97;
+    num += roomId.charCodeAt(6) * 29;
+    num += parseInt(roomId.slice(7, 9)) * 67;
+    num += roomId.charCodeAt(9) * 7;
+    num %= 100;
+    if (isNaN(num)) {
+      return undefined;
+    }
+    return num.toString();
+  }
+  export function isValidRoomId(roomId: Id): boolean {
+    if (roomId.length !== 12) {
+      return false;
+    }
+    const result: boolean[] = [];
+    for (const j of lodashRange(4)) {
+      const i = j * 3;
+      result.push('a' <= roomId[i] && roomId[i] <= 'z' && !!!['l', 'o'].includes(roomId[i]));
+      result.push('0' <= roomId[i + 1] && roomId[i + 1] <= '9');
+      result.push('0' <= roomId[i + 2] && roomId[i + 2] <= '9');
+    }
+    return result.every(_ => _) && roomId.slice(10, 12) === getLastTwoRoomIdDigits(roomId);
+  }
 
   // This is the data that is to be synced with Firestore.
   export type Data = {

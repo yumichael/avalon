@@ -25,13 +25,13 @@ let MissionsTrackX: React.FC<{ roundView: RoundView }> = ({ roundView }) => {
       : 'future'
   ];
   const { alphas } = bits;
-  const trackStyle = useMemo(
-    () => ({ ...styles.default, borderBottomColor: stampProps.color + alphas.helping.default }),
-    [stampProps],
-  );
+  // const trackStyle = useMemo(
+  //   () => ({ ...styles.default, borderBottomColor: stampProps.color + alphas.highlight.default }),
+  //   [stampProps],
+  // );
 
   return (
-    <View style={trackStyle}>
+    <View style={styles.default}>
       {Game.Mission.Index.range(info.getMissionCount()).map(i => (
         <MissionStampX roundView={roundView} missionIndex={i} key={i} />
       ))}
@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
     // flex: 0.56,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    borderBottomWidth: 1,
-    borderRadius: 5,
+    // borderBottomWidth: 1,
+    // borderRadius: 5,
   },
 });
 

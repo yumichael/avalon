@@ -12,10 +12,16 @@ let LeaderDecoratorX: React.FC = () => {
 
   const { colors, icons } = bits;
   return (
-    <View style={styles.default}>
-      {k === info.getMissionRoundLeader(i, j) ? (
-        <IconButton icon={icons.leader.default} color={colors.leader.passive} size={36} />
-      ) : null}
+    <View style={styles.anchor}>
+      <View style={styles.default}>
+        {k === info.getMissionRoundLeader(i, j) ? (
+          <IconButton
+            icon={icons.leader.default}
+            color={colors.leader.passive}
+            size={(bits.constSizes.screenHeight / 812) * 36}
+          />
+        ) : null}
+      </View>
     </View>
   );
 };
@@ -23,9 +29,15 @@ LeaderDecoratorX = observerWithMeta(loggedReactFC()(LeaderDecoratorX));
 
 const styles = StyleSheet.create({
   default: {
+    // position: 'absolute',
+    left: 0,
+    top: 0,
+  },
+  anchor: {
     position: 'absolute',
-    left: -16,
-    top: -16,
+    alignSelf: 'center',
+    height: (bits.constSizes.screenHeight / 812) * 100,
+    width: (bits.constSizes.screenHeight / 812) * 100,
   },
 });
 

@@ -2,7 +2,12 @@ import Game from '../model/Game/Game';
 
 export type GameSkin = {
   displayName: string;
-  roleNames: { [role in Game.Player.Role]: string } & { good: string; evil: string };
+  roleNames: { [role in Game.Player.Role]: string } & {
+    good: string;
+    goods: string;
+    evil: string;
+    evils: string;
+  };
   factionNames: { good: string; evil: string };
 };
 
