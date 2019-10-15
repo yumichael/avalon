@@ -42,7 +42,11 @@ namespace Room {
     if (isNaN(num)) {
       return undefined;
     }
-    return num.toString();
+    let ans = num.toString();
+    if (ans.length === 1) {
+      ans = '0' + ans;
+    }
+    return ans;
   }
   export function isValidRoomId(roomId: Id): boolean {
     if (roomId.length !== 12) {
@@ -66,6 +70,7 @@ namespace Room {
     readonly usersPowers?: UsersPowers;
     readonly director: User.Ref;
     readonly chat: Chat;
+    readonly lastUserOpenRoomTimestamp: Database.Timestamp;
   };
   export namespace Data {
     export type State = 'ready' | 'loading';

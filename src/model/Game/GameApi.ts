@@ -6,13 +6,13 @@ import GameActor from './GameActor';
 import { loggedConstructor, loggedMethod, logged, loggingBody } from 'src/library/logging/loggers';
 
 @loggedConstructor({ ...loggingBody }) // TODO try removing `loggedConstructor` and seeing what the native class looks like in the console (copy more metadata).
-class GameApi implements DocApi<Game.Ref> {
+class GameApi implements DocApi<Game.Ref, Game.Data> {
   readonly info: GameInformer;
   readonly act?: GameActor;
   readonly host?: GameHost;
 
   readonly ref: Game.Ref;
-  private get doc(): Game.Doc {
+  get doc(): Game.Doc {
     return Game.dataApi.getCurrentlyOpenedDoc(this.ref)!;
   }
   private readonly contract: DocApi.WillWaitUntilDocHasDataContract;
@@ -66,9 +66,12 @@ namespace GameApi {
     export type Cannot = 'cannot';
   }
 
-  export class Initiator extends DocApi.Initiator.createSubclass<Game.Ref, GameApi, GameApi.Specs>(
+  export class Initiator extends DocApi.Initiator.createSubclass<
+    Game.Ref,
+    Game.Data,
     GameApi,
-  ) {}
+    GameApi.Specs
+  >(GameApi) {}
   export type Specs = {
     gameRef: Game.Ref;
     playerIndex?: Game.Player.Index;

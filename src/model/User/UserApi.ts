@@ -9,9 +9,9 @@ import { loggedMethod, loggedConstructor, logged, loggingBody } from 'src/librar
 const { FieldValue } = Database;
 
 @loggedConstructor()
-class UserApi implements DocApi<User.Ref> {
+class UserApi implements DocApi<User.Ref, User.Data> {
   readonly ref: User.Ref;
-  private get doc(): Database.Document<User.Data> {
+  get doc(): Database.Document<User.Data> {
     return User.dataApi.getCurrentlyOpenedDoc(this.ref)!;
   }
   private readonly contract: DocApi.WillWaitUntilDocHasDataContract;
@@ -125,9 +125,12 @@ namespace UserApi {
     export type Cannot = 'cannot';
   }
 
-  export class Initiator extends DocApi.Initiator.createSubclass<User.Ref, UserApi, UserApi.Specs>(
+  export class Initiator extends DocApi.Initiator.createSubclass<
+    User.Ref,
+    User.Data,
     UserApi,
-  ) {}
+    UserApi.Specs
+  >(UserApi) {}
   export type Specs = {
     userRef: User.Ref;
   };

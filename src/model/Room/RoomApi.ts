@@ -15,10 +15,10 @@ import range from 'lodash/range';
 /* This class represents the API for a specific user interacting with a room.
  */
 @loggedConstructor()
-class RoomApi implements DocApi<Room.Ref> {
+class RoomApi implements DocApi<Room.Ref, Room.Data> {
   readonly userRef: User.Ref;
   readonly ref: Room.Ref;
-  private get doc(): Database.Document<Room.Data> {
+  get doc(): Database.Document<Room.Data> {
     return Room.dataApi.getCurrentlyOpenedDoc(this.ref)!;
   }
   private readonly contract: DocApi.WillWaitUntilDocHasDataContract;
@@ -34,6 +34,7 @@ class RoomApi implements DocApi<Room.Ref> {
       director,
       seats,
       chat: {},
+      lastUserOpenRoomTimestamp: (Database.FieldValue.serverTimestamp() as unknown) as Database.Timestamp,
     };
     roomDoc.set(init);
   }
@@ -50,7 +51,8 @@ class RoomApi implements DocApi<Room.Ref> {
     this.userRef = specs.userRef;
     const presenceKey = Room.Data.getUserPresenceKey(this.userRef);
     const presenceData: Room.Data.getUserPresenceKey.valueType = 'joined';
-    this.doc.update({ [presenceKey]: presenceData });
+    const lastUserOpenRoomTimestamp: Room.Data['lastUserOpenRoomTimestamp'] = (Database.FieldValue.serverTimestamp() as unknown) as Database.Timestamp;
+    this.doc.update({ [presenceKey]: presenceData, lastUserOpenRoomTimestamp });
     // console.groupEnd();
   }
 
@@ -74,7 +76,7 @@ class RoomApi implements DocApi<Room.Ref> {
   }
 
   getUserStatus(userRef: User.Ref): Room.UserStatus {
-    if (this.doc.data.users[userRef.id] !== 'joined') {
+    if (!!!this.doc.data.users[userRef.id]) {
       return 'out';
     }
     return this.getUserSeatIndex(this.userRef) !== undefined ? 'seated' : 'standing';
@@ -393,9 +395,12 @@ namespace RoomApi {
 
   export type SeatCountSetterValue = 'minimum' | Room.Seat.Count;
 
-  export class Initiator extends DocApi.Initiator.createSubclass<Room.Ref, RoomApi, RoomApi.Specs>(
+  export class Initiator extends DocApi.Initiator.createSubclass<
+    Room.Ref,
+    Room.Data,
     RoomApi,
-  ) {}
+    RoomApi.Specs
+  >(RoomApi) {}
   export type Specs = {
     roomRef: Room.Ref;
     userRef: User.Ref;

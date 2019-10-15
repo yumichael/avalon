@@ -1,15 +1,11 @@
 import { Contract } from '../patterns/Contracts';
-import {
-  loggedMethod,
-  loggedConstructor,
-  logged,
-  loggingBody,
-} from '../logging/loggers';
+import { loggedMethod, loggedConstructor, logged, loggingBody } from '../logging/loggers';
 import Database from '../Database';
 
-interface DocApi<DocRef extends Database.DocumentReference> {
+interface DocApi<DocRef extends Database.DocumentReference, Data extends object> {
   readonly ref: DocRef;
   getDataState(): DocApi.DataState;
+  readonly doc: Database.Document<Data>;
 }
 namespace DocApi {
   export type DataState = 'ready' | 'loading';
@@ -20,7 +16,8 @@ namespace DocApi {
   @loggedConstructor()
   export abstract class Initiator<
     TheDocRef extends Database.DocumentReference,
-    TheDocApi extends DocApi<TheDocRef>,
+    TheData extends object,
+    TheDocApi extends DocApi<TheDocRef, TheData>,
     ApiSpecs extends {}
   > {
     get ref() {
@@ -62,20 +59,22 @@ namespace DocApi {
         return undefined;
       }
     }
+    runOnReady(
+      onFulfilled: (api: TheDocApi) => TheDocApi | PromiseLike<TheDocApi>,
+      onRejected?: (reason: any) => PromiseLike<never>,
+    ): Promise<TheDocApi> {
+      return this.instance.doc.fetch().then(() => onFulfilled(this.instance), onRejected);
+    }
   }
   export namespace Initiator {
     export function createSubclass<
       TheDocRef extends Database.DocumentReference,
-      TheDocApi extends DocApi<TheDocRef>,
+      TheData extends object,
+      TheDocApi extends DocApi<TheDocRef, TheData>,
       ApiSpecs extends {}
-    >(
-      TheDocApi: new (
-        contract: WillWaitUntilDocHasDataContract,
-        specs: ApiSpecs,
-      ) => TheDocApi,
-    ) {
+    >(TheDocApi: new (contract: WillWaitUntilDocHasDataContract, specs: ApiSpecs) => TheDocApi) {
       @loggedConstructor()
-      class MyInitiator extends Initiator<TheDocRef, TheDocApi, ApiSpecs> {
+      class MyInitiator extends Initiator<TheDocRef, TheData, TheDocApi, ApiSpecs> {
         constructor(specs: ApiSpecs) {
           super(new TheDocApi(theContract, specs));
         }

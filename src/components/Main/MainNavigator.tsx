@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import MainMenuX from './MainMenu';
 import RoomX from '../Room/Room';
 import { loggedConstructor } from 'src/library/logging/loggers';
