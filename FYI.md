@@ -87,7 +87,7 @@
 
   - An entity that collects a group of users together so they can play a game with each other.
     ###### Director
-    - The user who probably started the room and who is the default person to be priviledged with doing something.
+    - The user who probably started the room and who is the default person to be privileged with doing something.
     ###### Playing
     - The Room-Game connecting API
       - The `.playing` property on `RoomApi` is uniquely tied to the Game ref.
