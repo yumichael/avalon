@@ -12,7 +12,10 @@ let TeamDecoratorX: React.FC = () => {
   const { playerIndex: k } = useContext(PlayerContext);
   const attr = info.getMissionRoundPlayerAttributes(i, j, k);
   const inTeam = attr && attr.inTeam;
-  const toggle = useCallback(() => act!.toggleTeamMember(i, j, k), [act, i, j, k]);
+  const toggle = useCallback(() => {
+    act!.toggleTeamMember(i, j, k);
+    console.log('kkk');
+  }, [act, i, j, k]);
 
   const { colors } = bits;
   const inTeamStyle = useInTeamStyle();
@@ -21,7 +24,7 @@ let TeamDecoratorX: React.FC = () => {
       {inTeam ? <View style={inTeamStyle} /> : null}
       {act && act.canToggleTeamMember(i, j, k) ? (
         <IconButton
-          icon={inTeam ? 'remove-circle' : 'add-circle'}
+          icon={inTeam ? 'minus-circle' : 'plus-circle'}
           color={colors.leader.active}
           onPress={toggle}
           style={styles.button}

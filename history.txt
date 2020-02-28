@@ -1,0 +1,36 @@
+2020/02/26
+
+diff --git a/.expo/packager-info.json b/.expo/packager-info.json
+index bfaf7c6..0a72bb8 100644
+--- a/.expo/packager-info.json
++++ b/.expo/packager-info.json
+@@ -1,9 +1,9 @@
+ {
+   "devToolsPort": 19002,
+-  "expoServerPort": 19000,
+-  "packagerPort": 19001,
+-  "packagerPid": 13048,
++  "expoServerPort": null,
++  "packagerPort": null,
++  "packagerPid": null,
+   "expoServerNgrokUrl": "https://rj-22v.anonymous.client.exp.direct",
+   "packagerNgrokUrl": "https://packager.rj-22v.anonymous.client.exp.direct",
+-  "ngrokPid": 13056
++  "ngrokPid": 71439
+ }
+\ No newline at end of file
+
+
+npm WARN react-native-paper@2.16.0 requires a peer of react-native-vector-icons@* but none is installed. You must install peer dependencies yourself.
+npm WARN react-navigation-stack@1.9.4 requires a peer of react-native-screens@^1.0.0 || ^1.0.0-alpha but none is installed. You must install peer dependencies yourself.
+npm WARN jest-expo@36.0.1 requires a peer of react-native-web@* but none is installed. You must install peer dependencies yourself.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 (node_modules/fsevents):
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 install: `node install`
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: Exit status 1
+
+
+npm WARN jest-expo@36.0.1 requires a peer of react-native-web@* but none is installed. You must install peer dependencies yourself.
+npm WARN react-navigation-stack@1.9.4 requires a peer of react-native-screens@^1.0.0 || ^1.0.0-alpha but none is installed. You must install peer dependencies yourself.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 (node_modules/fsevents):
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 install: `node install`
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: Exit status 1
