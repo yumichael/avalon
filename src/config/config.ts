@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import { initFirestorter } from 'firestorter';
 // import { configureDevtool } from 'mobx-react-devtools';
 
-// don't allow state modifications outside actions
+// // don't allow state modifications outside actions
 // mobxConfigure({ enforceActions: 'observed' });
 
 // Initialize Firebase
@@ -21,7 +21,7 @@ firebase.initializeApp(firebaseConfig);
 // Initialize `firestorter`
 initFirestorter({ firebase });
 
-// Any configurations are optional
+// // Any configurations are optional
 // configureDevtool({
 //   // Insert configurations.
 // });
@@ -29,7 +29,6 @@ initFirestorter({ firebase });
 // https://github.com/firebase/firebase-js-sdk/issues/97
 import { YellowBox } from 'react-native';
 import clone from 'lodash/clone';
-
 YellowBox.ignoreWarnings(['Setting a timer']);
 const theConsole = clone(console);
 console.warn = (message: string) => {

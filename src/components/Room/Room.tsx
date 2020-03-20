@@ -1,10 +1,8 @@
-import React, { useMemo, useContext, ReactElement, useEffect } from 'react';
-import { observerWithMeta } from 'src/library/helpers/mobxHelp';
+import React, { useMemo, useContext, useEffect } from 'react';
 import { RoomContext, PlayingContext } from './RoomContexts';
 import GameApi from 'src/model/Game/GameApi';
-import { loggedReactFC, loggedFunction } from 'src/library/logging/loggers';
+import { loggedReactFC } from 'src/library/logging/loggers';
 import RoomApi from 'src/model/Room/RoomApi';
-import { NavigationScreenComponent, NavigationScreenProp, NavigationRoute } from 'react-navigation';
 import { View, StyleSheet, KeyboardAvoidingView } from 'src/library/ui/components';
 import RoomBannerX from './Banner/RoomBanner';
 import RoomChatX from './Chat/RoomChat';
@@ -18,14 +16,18 @@ import NewGameMenuXInsert from './NewGame/NewGameMenuXInsert';
 import RoomXState from './RoomXState';
 import AccessoryBarX from './Accessory/AccessoryBar';
 import { Platform } from 'react-native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 
-type RoomXProps = {
-  roomRef: Room.Ref;
-  accessoryBar?: ReactElement | null;
-};
-let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
+// type RoomXProps = {
+//   roomRef: Room.Ref;
+//   accessoryBar?: ReactElement | null;
+// };
+let RoomX: React.FC<{
+  navigation: NavigationProp<{}>;
+  route: RouteProp<{ idk: { roomRef: Room.Ref } }, 'idk'>;
+}> = ({ navigation, route }) => {
   const { userApiInit } = useContext(UserContext);
-  const roomRef = navigation.getParam('roomRef');
+  const { roomRef } = route.params;
   const roomApiInit = useHardMemo<RoomApi.Initiator>(
     () => RoomApi.initiate({ roomRef, userRef: userApiInit.ref }),
     [roomRef.path, userApiInit.ref.path],
@@ -154,21 +156,21 @@ let RoomX: NavigationScreenComponent<RoomXProps> = ({ navigation }) => {
     </View>
   ) : null;
 };
-RoomX = observerWithMeta(loggedReactFC()(RoomX));
-const defaultNavigationOptions = RoomX.navigationOptions;
-RoomX.navigationOptions = loggedFunction({ name: 'RoomX.navigationOptions' })(
-  ({
-    navigation,
-  }: {
-    navigation: NavigationScreenProp<NavigationRoute<RoomXProps>, RoomXProps>;
-  }) => {
-    const accessoryBar = navigation.getParam('accessoryBar');
-    return {
-      ...defaultNavigationOptions,
-      ...(accessoryBar ? { headerRight: accessoryBar } : null),
-    };
-  },
-);
+RoomX = loggedReactFC()(RoomX);
+// const defaultNavigationOptions = RoomX.navigationOptions;
+// RoomX.navigationOptions = loggedFunction({ name: 'RoomX.navigationOptions' })(
+//   ({
+//     navigation,
+//   }: {
+//     navigation: NavigationScreenProp<NavigationRoute<RoomXProps>, RoomXProps>;
+//   }) => {
+//     const accessoryBar = navigation.getParam('accessoryBar');
+//     return {
+//       ...defaultNavigationOptions,
+//       ...(accessoryBar ? { headerRight: accessoryBar } : null),
+//     };
+//   },
+// );
 
 const styles = StyleSheet.create({
   default: {

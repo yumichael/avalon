@@ -30,8 +30,6 @@ export {
   Badge,
 } from 'react-native-paper';
 
-export { NavigationScreenComponent, NavigationContainer } from 'react-navigation';
-
 export const KeyboardUsingView: React.FC<KeyboardAvoidingViewProps> = props => (
   <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <KeyboardAvoidingView {...props} />

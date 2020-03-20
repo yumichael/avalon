@@ -10,13 +10,14 @@ import {
 } from 'src/library/ui/components';
 import { loggedReactFC, loggingBody } from 'src/library/logging/loggers';
 import { UserContext } from '../UserContexts';
-import { NavigationScreenComponent } from 'react-navigation';
-import RoomX from '../Room/Room';
+import { NavigationProp } from '@react-navigation/native';
 import { useEventCallback } from 'src/library/helpers/reactHelp';
 import Room from 'src/model/Room/Room';
 import bits from '../bits';
 
-let MainMenuX: NavigationScreenComponent = ({ navigation }) => {
+let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Ref } }> }> = ({
+  navigation,
+}) => {
   const { userApiInit } = useContext(UserContext); // TODO should deps of hooks include context values from up above? [right now assume yes]
   const userApi = userApiInit.readyInstance;
   const activity = userApi && userApi.activity;
@@ -37,7 +38,7 @@ let MainMenuX: NavigationScreenComponent = ({ navigation }) => {
     if (userApi) {
       userApi.enterRoom(roomRef);
     }
-    navigation.navigate(RoomX.name, { roomRef });
+    navigation.navigate('RoomX', { roomRef });
   }, [navigation, userApi, roomId]);
 
   const goMakeNewRoom = useCallback(() => {
@@ -58,7 +59,7 @@ let MainMenuX: NavigationScreenComponent = ({ navigation }) => {
   return (
     <KeyboardUsingView behavior="padding" style={styles.top}>
       <View style={styles.container}>
-        <Text>Hello {userApi && userApi.getDisplayName()}!</Text>
+        <Text>Hello {userApi?.getDisplayName()}!</Text>
         <Text />
         <Button
           onPress={goMakeNewRoom}
@@ -117,10 +118,6 @@ let MainMenuX: NavigationScreenComponent = ({ navigation }) => {
   );
 };
 MainMenuX = observerWithMeta(loggedReactFC({ ...loggingBody })(MainMenuX));
-MainMenuX.navigationOptions = {
-  ...MainMenuX.navigationOptions,
-  title: 'Main Menu',
-};
 
 const styles = StyleSheet.create({
   top: {

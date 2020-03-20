@@ -1,7 +1,12 @@
+import React from 'react';
 import 'src/config/config';
-import { createAppContainer } from 'react-navigation';
+import { NavigationContainer } from '@react-navigation/native';
 import LoginNavigatorX from './components/Main/LoginNavigator';
 
-const AppX = createAppContainer(LoginNavigatorX);
-
-export default AppX;
+export default function App() {
+  return (
+    <NavigationContainer>
+      <LoginNavigatorX />
+    </NavigationContainer>
+  );
+}

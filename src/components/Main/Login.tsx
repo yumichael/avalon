@@ -8,15 +8,15 @@ import {
   Button,
 } from 'src/library/ui/components';
 import { loggedReactFC } from 'src/library/logging/loggers';
-import { NavigationScreenComponent } from 'react-navigation';
-import LoggedInX from './LoggedIn';
+import { NavigationProp } from '@react-navigation/native';
 import User from 'src/model/User/User';
 
-let LoginX: NavigationScreenComponent = ({ navigation }) => {
+let LoginX: React.FC<{ navigation: NavigationProp<{ LoggedInX: { userId: User.Id } }> }> = ({
+  navigation,
+}) => {
   const [userId, setUserId] = useState(() => '');
   const goLogin = useCallback(() => {
-    const userRef = User.ref(userId);
-    navigation.navigate(LoggedInX.name, { userRef });
+    navigation.navigate('LoggedInX', { userId });
   }, [userId]);
   return (
     <KeyboardUsingView behavior="padding" style={styles.screen}>
