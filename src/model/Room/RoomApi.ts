@@ -26,9 +26,10 @@ class RoomApi implements DocApi<Room.Ref, Room.Data> {
   @loggedMethod()
   static setupNewRoom(roomRef: Room.Ref, director: User.Ref, seatCount: Room.Seat.Count) {
     const roomDoc = Room.dataApi.openUntrackedDoc(roomRef);
-    const seats: Room.Data['seats'] = Object.assign({}, Room.Seat.Index.range(seatCount).map(
-      i => Room.Seat.defaultValue,
-    ) as Room.Seats);
+    const seats: Room.Data['seats'] = Object.assign(
+      {},
+      Room.Seat.Index.range(seatCount).map(i => Room.Seat.defaultValue) as Room.Seats,
+    );
     const init: Room.Data = {
       users: { [director.id]: 'joined' },
       director,

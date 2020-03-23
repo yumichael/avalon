@@ -19,6 +19,7 @@
     "autobind-decorator": "^2.4.0",
     "base-64": "^0.1.0",
     "expo": "^36.0.2",
+    "expo-facebook": "~8.0.0",
     "firebase": "^7.9.1",
     "firestorter": "^2.0.1",
     "lodash": "^4.17.15",

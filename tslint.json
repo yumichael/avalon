@@ -26,14 +26,11 @@
     "member-ordering": false,
     "interface-over-type-literal": false,
     "strict-type-predicates": true,
-    "max-classes-per-file": [true, 10, "exclude-class-expressions"]
-    // "react-hooks-nesting": "error"
+    "max-classes-per-file": [true, 10, "exclude-class-expressions"],
+    // "react-hooks-nesting": "error",
+    "array-type": [true, "array-simple"]
   },
   "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
-    ]
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts", "coverage/lcov-report/*.js"]
   }
 }

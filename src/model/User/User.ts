@@ -1,36 +1,37 @@
 import Database from 'src/library/Database';
 import Room from '../Room/Room';
-import { observable, runInAction } from 'mobx';
 
-// TODO will need to refactor this.
-class UserData {
-  @observable readonly users: { [_ in User.Id]?: { avatarUri: string } | 'loading' } = {};
-}
-const userData = new UserData();
+// // TODO will need to refactor this. // I mean, delete this commented out code, now.
+// class UserData {
+//   @observable readonly users: { [_ in User.Id]?: { avatarUri: string } | 'loading' } = {};
+// }
+// const userData = new UserData();
 export function getUserAvatarUri(userRef: User.Ref): string | undefined {
-  const users = userData.users;
-  const user = users[userRef.id];
-  if (user === undefined) {
-    runInAction(() => {
-      users[userRef.id] = 'loading';
-    });
-    fetch('https://randomuser.me/api/?inc=picture')
-      .then(res => {
-        // console.log('res = ' + detailAsString(res));
-        return res.json();
-      })
-      .then((obj: any) => {
-        runInAction(() => {
-          users[userRef.id] = { avatarUri: obj.results[0].picture.large };
-        });
-      })
-      .catch(reason => {
-        // console.log('bad = ' + reason);
-      });
-  } else if (user !== 'loading') {
-    return user.avatarUri;
-  }
-  return 'https://randomuser.me/api/portraits/men/65.jpg';
+  // const users = userData.users;
+  // const user = users[userRef.id];
+  // if (user === undefined) {
+  //   runInAction(() => {
+  //     users[userRef.id] = 'loading';
+  //   });
+  //   fetch('https://randomuser.me/api/?inc=picture')
+  //     .then(res => {
+  //       // console.log('res = ' + detailAsString(res));
+  //       return res.json();
+  //     })
+  //     .then((obj: any) => {
+  //       runInAction(() => {
+  //         users[userRef.id] = { avatarUri: obj.results[0].picture.large };
+  //       });
+  //     })
+  //     .catch(reason => {
+  //       // console.log('bad = ' + reason);
+  //     });
+  // } else if (user !== 'loading') {
+  //   return user.avatarUri;
+  // }
+  // return 'https://randomuser.me/api/portraits/men/65.jpg';
+  // // TODO delete above old code
+  return `https://graph.facebook.com/${userRef.id}/picture`;
 }
 
 namespace User {
@@ -46,6 +47,7 @@ namespace User {
   // This is the data that is to be synced with Firestore.
   export type Data = {
     readonly displayName: string;
+    readonly photoUrl: string;
     readonly activity?: Activity;
   };
   export namespace Data {
