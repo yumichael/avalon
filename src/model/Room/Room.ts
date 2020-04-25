@@ -65,6 +65,7 @@ namespace Room {
   // This is the data that is to be synced with Firestore.
   export type Data = {
     readonly users: UsersPresences;
+    readonly userProperties: UserProperties;
     readonly seats: Seats;
     readonly playing?: Playing;
     readonly usersPowers?: UsersPowers;
@@ -86,7 +87,18 @@ namespace Room {
     export namespace getUserPresenceKey {
       export type valueType = UserPresence;
     }
+    export function getUserPropertyKey(userRef: User.Ref): string {
+      return `userProperties.${userRef.id}`;
+    }
+    export namespace getUserPropertyKey {
+      export type valueType = UserProperty;
+    }
   }
+
+  export type UserProperties = { readonly [_ in User.Id]?: UserProperty };
+  export type UserProperty = {
+    readonly displayName: string;
+  };
 
   export type Seats = { readonly [_ in Seat.Index]?: Seat };
   export type MutableSeats = { [_ in Seat.Index]?: Seat };

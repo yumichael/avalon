@@ -2,8 +2,7 @@ import Room from './../Room/Room';
 import Database from 'src/library/Database';
 import User from '../User/User';
 import DocApi from 'src/library/patterns/DocApi';
-import RoomApi from '../Room/RoomApi';
-import { loggedConstructor, loggedMethod } from 'src/library/logging/loggers';
+import { loggedConstructor } from 'src/library/logging/loggers';
 
 @loggedConstructor()
 class UserActivity {
@@ -23,16 +22,6 @@ class UserActivity {
     this.ref = userRef;
     this.roomRef = this.data.roomRef;
     // console.groupEnd();
-  }
-
-  private getRoomApiSpecs(): RoomApi.Specs {
-    const { roomRef } = this.data;
-    return { userRef: this.ref, roomRef };
-  }
-
-  @loggedMethod()
-  initiateRoomApi(): RoomApi.Initiator {
-    return RoomApi.initiate(this.getRoomApiSpecs());
   }
 
   getRoomRef(): Room.Ref {

@@ -1,4 +1,3 @@
-import { invariant } from './exceptions/exceptions';
 import { firestore } from 'firebase';
 import * as firestorter from 'firestorter';
 import {

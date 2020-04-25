@@ -29,7 +29,10 @@ initFirestorter({ firebase });
 // https://github.com/firebase/firebase-js-sdk/issues/97
 import { YellowBox } from 'react-native';
 import clone from 'lodash/clone';
-YellowBox.ignoreWarnings(['Setting a timer']);
+YellowBox.ignoreWarnings([
+  'Setting a timer',
+  'Non-serializable values were found in the navigation state',
+]);
 const theConsole = clone(console);
 console.warn = (message: string) => {
   if (message.indexOf('Setting a timer') <= -1) {

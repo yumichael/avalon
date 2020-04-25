@@ -32,6 +32,7 @@ class RoomApi implements DocApi<Room.Ref, Room.Data> {
     );
     const init: Room.Data = {
       users: { [director.id]: 'joined' },
+      userProperties: {},
       director,
       seats,
       chat: {},
@@ -50,10 +51,17 @@ class RoomApi implements DocApi<Room.Ref, Room.Data> {
     Room.dataApi.openNewDoc(specs.roomRef);
     this.ref = specs.roomRef;
     this.userRef = specs.userRef;
+    const { displayName } = specs.userProperties;
     const presenceKey = Room.Data.getUserPresenceKey(this.userRef);
     const presenceData: Room.Data.getUserPresenceKey.valueType = 'joined';
+    const propertyKey = Room.Data.getUserPropertyKey(this.userRef);
+    const propertyData: Room.Data.getUserPropertyKey.valueType = { displayName };
     const lastUserOpenRoomTimestamp: Room.Data['lastUserOpenRoomTimestamp'] = (Database.FieldValue.serverTimestamp() as unknown) as Database.Timestamp;
-    this.doc.update({ [presenceKey]: presenceData, lastUserOpenRoomTimestamp });
+    this.doc.update({
+      [presenceKey]: presenceData,
+      [propertyKey]: propertyData,
+      lastUserOpenRoomTimestamp,
+    });
     // console.groupEnd();
   }
 
@@ -65,6 +73,10 @@ class RoomApi implements DocApi<Room.Ref, Room.Data> {
   // ATTENTION! Every method below MUST NOT be called before the data is synced from Firebase.
 
   // First the view methods.
+
+  getUserName(userRef: User.Ref): string {
+    return this.doc.data.userProperties[userRef.id]?.displayName || '[no name]';
+  }
 
   getUserSeatIndex(userRef: User.Ref): Room.Seat.Index | undefined {
     for (const i of Room.Seat.Index.range(this.getSeatCount())) {
@@ -381,6 +393,7 @@ class RoomApi implements DocApi<Room.Ref, Room.Data> {
       if (oldGameRef) {
         const oldGameDoc = Game.dataApi.openUntrackedDoc(oldGameRef);
         if (oldGameDoc) {
+          // TODO wait this does (I mean, "should") not work.
           oldGameDoc.delete();
         }
       }
@@ -405,6 +418,9 @@ namespace RoomApi {
   export type Specs = {
     roomRef: Room.Ref;
     userRef: User.Ref;
+    userProperties: {
+      displayName: string;
+    };
   };
 }
 

@@ -1,4 +1,3 @@
-import console from 'console';
 import App from './src/App';
 
 // https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
@@ -13,8 +12,3 @@ if (!global.atob) {
 export default App;
 
 // CMD + SHIFT + R for snippets
-
-// React Navigation doesn't work guys
-// - Tabs Example
-// - Drawer + Tabs
-// - Links to Settings Tab

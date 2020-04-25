@@ -8,12 +8,12 @@ let NewGameButtonX: React.FC<{
   callback: () => void;
   beenActivated: boolean;
 }> = ({ callback, beenActivated }) => {
-  const { colors } = bits;
+  const { colors, icons } = bits;
   const activatedStyle = useActivatedStyle();
   return (
     <ToggleButton
       onPress={callback}
-      icon="games"
+      icon={icons.newGame.default}
       color={colors.concern.active}
       status={beenActivated ? 'checked' : 'unchecked'}
       style={beenActivated ? activatedStyle : styles.default}

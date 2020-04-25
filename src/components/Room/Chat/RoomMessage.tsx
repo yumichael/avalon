@@ -7,6 +7,7 @@ import UserAvatarX from '../User/UserAvatar';
 import { UserContext } from 'src/components/UserContexts';
 import bits from 'src/components/bits';
 import { ViewStyle } from 'react-native';
+import { RoomContext } from 'src/components/Room/RoomContexts';
 
 const RoomMessageSeparatorX: React.FC = () => {
   const separatorStyle = useSeparatorStyle();
@@ -16,12 +17,14 @@ export { RoomMessageSeparatorX };
 
 let RoomMessageX: React.FC<{ message: Room.Message }> = ({ message: { userRef, text } }) => {
   const { userApiInit } = useContext(UserContext);
-  const userApi = userApiInit && userApiInit.readyInstance;
+  const userApi = userApiInit?.readyInstance;
+  const { roomApiInit } = useContext(RoomContext);
+  const roomApi = roomApiInit.readyInstance;
   return (
     <>
-      <View style={userApi && userApi.ref.isEqual(userRef) ? styles.myself : styles.otherUser}>
+      <View style={userApi?.ref.isEqual(userRef) ? styles.myself : styles.otherUser}>
         <UserAvatarX userRef={userRef} size={16} style={styles.avatar} />
-        <Text style={styles.userName}>{userRef.id}</Text>
+        <Text style={styles.userName}>{roomApi?.getUserName(userRef)}</Text>
       </View>
       <Text style={styles.message}>{text}</Text>
     </>

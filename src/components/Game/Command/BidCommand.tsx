@@ -82,7 +82,7 @@ let BidCommandX: React.FC = () => {
               <View style={styles.actions}>
                 <Button
                   key="reveal"
-                  icon="visibility"
+                  icon={icons.seeSecret.default}
                   color={colors.team.default}
                   onPress={revealBids}
                 >

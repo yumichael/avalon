@@ -9,7 +9,7 @@ import { Linking } from 'react-native';
 
 let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
   const { gameApi } = useContext(GameContext);
-  const { colors, fancyText } = bits;
+  const { colors, fancyText, icons } = bits;
   const openRules = useCallback(
     () => Linking.openURL('https://en.wikipedia.org/wiki/The_Resistance_(game)'),
     [Linking],
@@ -28,15 +28,15 @@ let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
           hide their identities and gain everyone's trust so they can be chosen to be placed on the{' '}
           {fancyText.team}s for these {fancyText.mission}s and gain the chance to sabotage them.
           {'\n\n'}
-          The {fancyText.goodPlayers} wins the game if three {fancyText.mission}s are completed
-          successfully.
+          The {fancyText.goodPlayers} wins the game if three {fancyText.mission}s are completed{' '}
+          {fancyText.success}fully.
           {'\n\n'}
-          The {fancyText.evilPlayers} win if three {fancyText.mission}s fail.
-          {'\n\n'}A fundamental rule of the game is that players may say anything that they want, at
-          anytime during the game. You are allowed to say anything, to any one, at any time as long
-          as it is said publicly. Discussion, deception, intuition, social interaction and logical
-          deductions are all equally important to winning. The only thing you must not do is show
-          your phone screen to anyone else.
+          The {fancyText.evilPlayers} win if three {fancyText.mission}s {fancyText.fail}.{'\n\n'}A
+          fundamental rule of the game is that players may say anything that they want, at anytime
+          during the game. You are allowed to say anything, to any one, at any time as long as it is
+          said publicly. Discussion, deception, intuition, social interaction and logical deductions
+          are all equally important to winning. The only thing you must not do is show your phone
+          screen to anyone else.
           {'\n\n'}
           <Text style={styles.hyperlink} onPress={openRules}>
             Link to Detailed Rules
@@ -46,7 +46,7 @@ let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
       </ScrollView>
       {gameApi.info.getGameFinish() ? null : !!!secretsView.isViewingRoleInfo() ? (
         <Button
-          icon="visibility"
+          icon={icons.seeSecret.default}
           color={
             !!!gameApi.act || gameApi.act.hasSeenRole()
               ? colors.room.passive
@@ -59,7 +59,7 @@ let GameHelpX: React.FC<{ secretsView: SecretsView }> = ({ secretsView }) => {
         </Button>
       ) : (
         <Button
-          icon="visibility-off"
+          icon={icons.unseeSecret.default}
           color={colors.room.passive}
           onPress={secretsView.stopViewingRoleInfo}
           style={styles.button}

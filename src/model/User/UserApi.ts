@@ -25,7 +25,6 @@ class UserApi implements DocApi<User.Ref, User.Data> {
     this.contract = contract;
     User.dataApi.openNewDoc(specs.userRef);
     this.ref = specs.userRef;
-    // console.groupEnd();
   }
 
   @loggedMethod()

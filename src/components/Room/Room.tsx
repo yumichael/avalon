@@ -17,29 +17,31 @@ import RoomXState from './RoomXState';
 import AccessoryBarX from './Accessory/AccessoryBar';
 import { Platform } from 'react-native';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { observerWithMeta } from 'src/library/helpers/mobxHelp';
 
-// type RoomXProps = {
-//   roomRef: Room.Ref;
-//   accessoryBar?: ReactElement | null;
-// };
 let RoomX: React.FC<{
   navigation: NavigationProp<{}>;
   route: RouteProp<{ idk: { roomRef: Room.Ref } }, 'idk'>;
 }> = ({ navigation, route }) => {
   const { userApiInit } = useContext(UserContext);
+  const userApi = userApiInit.readyInstance;
   const { roomRef } = route.params;
   const roomApiInit = useHardMemo<RoomApi.Initiator>(
-    () => RoomApi.initiate({ roomRef, userRef: userApiInit.ref }),
+    () =>
+      RoomApi.initiate({
+        roomRef,
+        userRef: userApiInit.ref,
+        userProperties: { displayName: userApi?.getDisplayName() || '[missing name]' },
+      }),
     [roomRef.path, userApiInit.ref.path],
   );
   const roomApi = roomApiInit.readyInstance;
-  const playing = roomApi && roomApi.playing;
+  const playing = roomApi?.playing;
 
-  const gameApiInit = useHardMemo<GameApi.Initiator | undefined>(
-    () => playing && playing.initiateGameApi(),
-    [playing],
-  );
-  const gameApi = gameApiInit && gameApiInit.readyInstance;
+  const gameApiInit = useHardMemo<GameApi.Initiator | undefined>(() => playing?.initiateGameApi(), [
+    playing,
+  ]);
+  const gameApi = gameApiInit?.readyInstance;
   const gameXInsert = useHardMemo<GameXInsert | undefined>(
     () => gameApi && new GameXInsert(gameApi),
     [gameApi],
@@ -51,7 +53,7 @@ let RoomX: React.FC<{
     }),
     [playing, gameXInsert],
   );
-  const gameFinish = playing && playing.getFinish();
+  const gameFinish = playing?.getFinish();
 
   // room UI state
 
@@ -61,9 +63,7 @@ let RoomX: React.FC<{
   if (gameApi && !!!gameFinish && !!!state.isViewingGame()) {
     state.viewGame();
   }
-  useEffect(state.stopAssigningDirector, [
-    roomApi && roomApi.getDirector().isEqual(roomApi.userRef),
-  ]);
+  useEffect(state.stopAssigningDirector, [roomApi?.getDirector().isEqual(roomApi.userRef)]);
   useEffect(state.stopViewingNewGameMenu, [gameApi]);
   useEffect(state.stopViewingGameHelp, [gameApi]);
 
@@ -84,8 +84,8 @@ let RoomX: React.FC<{
   //   }
   // }, [accessoryButton, previousAccessoryButton]);
   useEffect(() => {
-    navigation.setParams({ accessoryBar });
-  }, [accessoryBar]);
+    navigation.setOptions({ headerRight: () => accessoryBar });
+  }, [navigation, accessoryBar]);
 
   const keyboard = useKeyboard();
   const attentionStyle = useMemo(
@@ -156,7 +156,7 @@ let RoomX: React.FC<{
     </View>
   ) : null;
 };
-RoomX = loggedReactFC()(RoomX);
+RoomX = observerWithMeta(loggedReactFC()(RoomX));
 // const defaultNavigationOptions = RoomX.navigationOptions;
 // RoomX.navigationOptions = loggedFunction({ name: 'RoomX.navigationOptions' })(
 //   ({

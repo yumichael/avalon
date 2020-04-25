@@ -44,8 +44,9 @@ let MissionStampX: React.FC<{
     <View style={styles.default}>
       {i === iViewing ? (
         <IconButton
-          icon="arrow-drop-up"
+          icon="triangle"
           color={stampProps.color + alphas.helping.default}
+          size={15}
           style={styles.expander}
         />
       ) : null}
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   expander: {
     position: 'absolute',
-    bottom: -24,
+    bottom: -14,
     alignSelf: 'center',
   },
 });

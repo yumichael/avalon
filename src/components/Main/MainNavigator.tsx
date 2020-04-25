@@ -9,8 +9,8 @@ const Stack = createStackNavigator();
 let MainNavigatorX: React.FC = () => {
   return (
     <Stack.Navigator initialRouteName="MainMenuX">
-      <Stack.Screen name={'MainMenuX'} component={MainMenuX} />
-      <Stack.Screen name={'RoomX'} component={RoomX} />
+      <Stack.Screen name={'MainMenuX'} component={MainMenuX} options={{ title: 'Main Menu' }} />
+      <Stack.Screen name={'RoomX'} component={RoomX} options={{ title: '' }} />
     </Stack.Navigator>
   );
 };

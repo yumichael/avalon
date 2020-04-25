@@ -30,8 +30,8 @@ LeaderDecoratorX = observerWithMeta(loggedReactFC()(LeaderDecoratorX));
 const styles = StyleSheet.create({
   default: {
     // position: 'absolute',
-    left: 0,
-    top: 0,
+    left: -4,
+    top: -4,
   },
   anchor: {
     position: 'absolute',

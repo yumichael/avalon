@@ -11,7 +11,7 @@ let ViewSecretsButtonX: React.FC<{ secretsView: SecretsView }> = ({ secretsView 
   return (
     <ToggleButton
       onPress={secretsView.toggleViewingRoleInfo}
-      icon="visibility"
+      icon={bits.icons.seeSecret.default}
       color={bits.colors.room.passive}
       status={beenActivated ? 'checked' : 'unchecked'}
       style={beenActivated ? activatedStyle : styles.default}

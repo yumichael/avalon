@@ -6,13 +6,18 @@ import MainNavigatorX from './MainNavigator';
 import User from 'src/model/User/User';
 import { useHardMemo } from 'src/library/helpers/reactHelp';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
+import firebase from 'firebase/app';
 
 let LoggedInX: React.FC<{
   navigation: NavigationProp<{}>;
-  route: RouteProp<{ idk: { userId: User.Id } }, 'idk'>;
+  route: RouteProp<{ idk: {} }, 'idk'>;
 }> = ({ navigation, route }) => {
-  const { userId } = route.params;
-  const userRef = User.ref(userId);
+  const user = firebase.auth().currentUser as firebase.User;
+  const userRef = User.ref(user.providerData[0]!.uid);
+  const userDoc = User.dataApi.openUntrackedDoc(userRef);
+  const userData: User.Data = { displayName: user.displayName || '[no name]' };
+  userDoc.set(userData, { merge: true });
+
   const userApiInit = useHardMemo<UserApi.Initiator>(() => UserApi.initiate({ userRef }), [
     userRef.path,
   ]);

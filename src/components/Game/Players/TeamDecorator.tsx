@@ -14,17 +14,16 @@ let TeamDecoratorX: React.FC = () => {
   const inTeam = attr && attr.inTeam;
   const toggle = useCallback(() => {
     act!.toggleTeamMember(i, j, k);
-    console.log('kkk');
   }, [act, i, j, k]);
 
-  const { colors } = bits;
+  const { colors, icons } = bits;
   const inTeamStyle = useInTeamStyle();
   return (
     <>
       {inTeam ? <View style={inTeamStyle} /> : null}
       {act && act.canToggleTeamMember(i, j, k) ? (
         <IconButton
-          icon={inTeam ? 'minus-circle' : 'plus-circle'}
+          icon={inTeam ? icons.removeFromTeam.default : icons.addToTeam.default}
           color={colors.leader.active}
           onPress={toggle}
           style={styles.button}

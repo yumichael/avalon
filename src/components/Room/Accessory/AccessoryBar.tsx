@@ -4,15 +4,17 @@ import { loggedReactFC } from 'src/library/logging/loggers';
 import { StyleSheet, View } from 'src/library/ui/components';
 import { RoomContext, PlayingContext } from '../RoomContexts';
 import NewGameButtonX from './NewGameButton';
+import { UserContext } from 'src/components/UserContexts';
 
 let AccessoryBarX: React.FC = () => {
+  const { userApiInit } = useContext(UserContext);
   const { roomApiInit, state } = useContext(RoomContext);
   const { gameXInsert } = useContext(PlayingContext);
   const roomApi = roomApiInit.readyInstance;
   const buttons: ReactElement[] = [];
   const playing = roomApi && roomApi.playing;
   const finish = playing && playing.getFinish();
-  if (!!!playing || finish) {
+  if ((!!!playing || finish) && roomApi?.getDirector().isEqual(userApiInit.ref)) {
     buttons.push(
       <NewGameButtonX
         key="NewGame"

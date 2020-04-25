@@ -13,7 +13,10 @@ import { UserContext } from '../UserContexts';
 import { NavigationProp } from '@react-navigation/native';
 import { useEventCallback } from 'src/library/helpers/reactHelp';
 import Room from 'src/model/Room/Room';
-import bits from '../bits';
+import bits from 'src/components/bits';
+import firebase from 'firebase/app';
+import { theCredential, login } from './Login';
+import UserAvatarX from 'src/components/Room/User/UserAvatar';
 
 let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Ref } }> }> = ({
   navigation,
@@ -21,10 +24,6 @@ let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Re
   const { userApiInit } = useContext(UserContext); // TODO should deps of hooks include context values from up above? [right now assume yes]
   const userApi = userApiInit.readyInstance;
   const activity = userApi && userApi.activity;
-  // const roomApiInit = useHardMemo<RoomApi.Initiator | undefined>(
-  //   () => activity && activity.initiateRoomApi(),
-  //   [activity],
-  // );
 
   const [roomId, setRoomId] = useState('');
   useMemo(() => {
@@ -53,12 +52,31 @@ let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Re
     }
   }, [userApi]);
 
+  const signOut = useCallback(() => {
+    firebase
+      .auth()
+      .currentUser?.delete()
+      .catch(() =>
+        login().then(() =>
+          firebase
+            .auth()
+            .currentUser?.reauthenticateWithCredential(theCredential)
+            .then(() => firebase.auth().currentUser?.delete()),
+        ),
+      );
+  }, [firebase]);
+
   const inputStyle = useInputStyle();
   const fixedInputStyle = useFixedInputStyle();
   const buttonStyle = useButtonStyle();
   return (
-    <KeyboardUsingView behavior="padding" style={styles.top}>
-      <View style={styles.container}>
+    <KeyboardUsingView behavior="padding" style={styles.container}>
+      <View style={styles.top}>
+        <Text style={styles.title}>{bits.fancyText.theGame}</Text>
+      </View>
+      <View style={styles.body}>
+        <UserAvatarX userRef={userApiInit.ref} size={100} />
+        <Text />
         <Text>Hello {userApi?.getDisplayName()}!</Text>
         <Text />
         <Button
@@ -69,7 +87,7 @@ let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Re
           New Room
         </Button>
         <Text />
-        <View style={styles.innerContainer}>
+        <View style={styles.roomBody}>
           <TextInput
             returnKeyType="done"
             placeholder="Room Code"
@@ -113,6 +131,12 @@ let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Re
             </>
           )}
         </View>
+        <Text />
+      </View>
+      <View style={styles.bottom}>
+        <Button onPress={signOut} style={buttonStyle}>
+          Sign Out
+        </Button>
       </View>
     </KeyboardUsingView>
   );
@@ -120,17 +144,27 @@ let MainMenuX: React.FC<{ navigation: NavigationProp<{ RoomX: { roomRef: Room.Re
 MainMenuX = observerWithMeta(loggedReactFC({ ...loggingBody })(MainMenuX));
 
 const styles = StyleSheet.create({
-  top: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  innerContainer: {
+  top: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  body: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bottom: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roomBody: {
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -140,6 +174,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 3,
     textAlign: 'center',
+  },
+  title: {
+    fontSize: 36,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 });
 function useInputStyle() {

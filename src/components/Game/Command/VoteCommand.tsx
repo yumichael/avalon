@@ -13,7 +13,7 @@ let VoteCommandX: React.FC = () => {
   const voteReject = useCallback(() => act!.submitVote(i, j, 'reject'), [act, i, j]);
   const attr = act && info.getMissionRoundPlayerAttributes(i, j, act.playerIndex);
 
-  const { colors, fancyText } = bits;
+  const { colors, fancyText, icons } = bits;
   return act ? (
     <>
       <View style={styles.instructions}>
@@ -27,7 +27,7 @@ let VoteCommandX: React.FC = () => {
         ) : act.canSubmitVote(i, j) ? (
           <View style={styles.actions}>
             <Button
-              icon="radio-button-unchecked"
+              icon={icons.vote.default}
               color={colors.approve.default}
               onPress={voteApprove}
               disabled={!!!act.canSubmitVote(i, j, 'approve')}
@@ -35,7 +35,7 @@ let VoteCommandX: React.FC = () => {
               approve
             </Button>
             <Button
-              icon="radio-button-unchecked"
+              icon={icons.vote.default}
               color={colors.reject.default}
               onPress={voteReject}
               disabled={!!!act.canSubmitVote(i, j, 'reject')}

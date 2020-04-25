@@ -17,9 +17,9 @@ let PlayerAttributesX: React.FC<{ playerIndex: Game.Player.Index; secretsView: S
   const playerContextValue = useMemo(() => ({ playerIndex: k }), [k]);
   return (
     <PlayerContext.Provider value={playerContextValue}>
+      <VoteDecoratorX />
       <LeaderDecoratorX />
       <TeamDecoratorX />
-      <VoteDecoratorX />
       {secretsView.isViewingRoleInfo() ? <RoleDecoratorX /> : null}
     </PlayerContext.Provider>
   );

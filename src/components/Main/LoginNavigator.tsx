@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 
 let LoginNavigatorX: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="LoginX">
+    <Stack.Navigator headerMode="none" initialRouteName="LoginX">
       <Stack.Screen name={'LoginX'} component={LoginX} />
       <Stack.Screen name={'LoggedInX'} component={LoggedInX} />
     </Stack.Navigator>

@@ -33,7 +33,7 @@ let RoundStampX: React.FC<{
   //   ),
   //   [i],
   // );
-  const { colors, alphas } = bits;
+  const { colors, alphas, icons } = bits;
   // const viewingStyle = useViewingStyle();
   return (
     <View style={styles.default}>
@@ -41,7 +41,7 @@ let RoundStampX: React.FC<{
       /* TODO get rid of commented out code in this file */}
       {shouldReturnNothing ? null : (
         <ToggleButton
-          icon={j < theRoundCountForMission - 1 ? 'chevron-right' : 'last-page'}
+          icon={j < theRoundCountForMission - 1 ? icons.aRound.default : icons.lastRound.default}
           color={
             voteOutcome
               ? colors[voteOutcome].default

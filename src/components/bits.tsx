@@ -33,16 +33,24 @@ const alphas = {
 
 const icons = {
   leader: { default: 'star' },
-  success: { default: 'gps-fixed' },
-  fail: { default: 'gps-off' },
-  currentMission: { default: 'gps-not-fixed' },
-  futureMission: { default: 'radio-button-unchecked' },
-  sit: { default: 'get-app' },
-  stand: { default: 'publish' /*'exit-to-app'*/ },
+  success: { default: 'check-circle' },
+  fail: { default: 'close-circle' },
+  currentMission: { default: 'circle' },
+  futureMission: { default: 'circle-outline' },
+  aRound: { default: 'chevron-right' },
+  lastRound: { default: 'page-last' },
+  sit: { default: 'arrow-down-thick' },
+  stand: { default: 'arrow-up-thick' },
   chat: { default: 'forum' },
-  help: { default: 'help' },
-  info: { default: 'info' },
-  assignDirector: { default: 'create' },
+  help: { default: 'help-circle' },
+  info: { default: 'information' },
+  assignDirector: { default: 'circle' },
+  seeSecret: { default: 'eye' },
+  unseeSecret: { default: 'eye-off' },
+  vote: { default: 'radiobox-blank' },
+  newGame: { default: 'gamepad' },
+  addToTeam: { default: 'plus-circle' },
+  removeFromTeam: { default: 'minus-circle' },
 };
 
 const fancyTextStyle = {
